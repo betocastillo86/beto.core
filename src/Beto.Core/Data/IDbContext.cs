@@ -6,9 +6,10 @@
 namespace Beto.Core.Data
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Storage;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
 
     /// <summary>
     /// Interface for Entity Framework Context
@@ -21,7 +22,7 @@ namespace Beto.Core.Data
         /// <value>
         /// The database.
         /// </value>
-        Database Database { get; }
+        DatabaseFacade Database { get; }
 
         /// <summary>
         /// Saves the changes.
@@ -33,7 +34,7 @@ namespace Beto.Core.Data
         /// Saves the changes asynchronous.
         /// </summary>
         /// <returns>the task</returns>
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Sets this instance.
