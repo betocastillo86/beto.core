@@ -22,7 +22,7 @@ namespace Beto.Core.EventPublisher
         /// <summary>
         /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="serviceFactory">The service factory.</param>
         public Publisher(IServiceFactory serviceFactory)
         {
             this.serviceFactory = serviceFactory;

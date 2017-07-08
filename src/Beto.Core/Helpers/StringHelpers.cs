@@ -20,6 +20,11 @@ namespace Beto.Core.Helpers
         /// </summary>
         private static Random random = new Random();
 
+        /// <summary>
+        /// Gets the random string.
+        /// </summary>
+        /// <param name="length">The length.</param>
+        /// <returns>the text</returns>
         public static string GetRandomString(int length = 6)
         {
             const string CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._/{}%&()!#-*¡?¿";

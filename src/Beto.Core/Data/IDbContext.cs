@@ -31,8 +31,9 @@ namespace Beto.Core.Data
         int SaveChanges();
 
         /// <summary>
-        /// Saves the changes asynchronous.
+        /// Saves Changes asynchronous
         /// </summary>
+        /// <param name="cancellationToken">the cancellation token</param>
         /// <returns>the task</returns>
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 

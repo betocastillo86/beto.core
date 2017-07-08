@@ -9,6 +9,10 @@ namespace Beto.Core.Registers
     using System.Collections.Generic;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <summary>
+    /// Default service factory for dependency injection
+    /// </summary>
+    /// <seealso cref="Beto.Core.Registers.IServiceFactory" />
     public class DefaultServiceFactory : IServiceFactory
     {
         /// <summary>
