@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
   </ItemGroup>
 

@@ -62,7 +62,7 @@ namespace Beto.Core.Web.Api
         /// <value>
         /// The maximum size of the page.
         /// </value>
-        protected int MaxPageSize { get; set; } = 50;
+        public int MaxPageSize { get; protected set; } = 50;
 
         /// <summary>
         /// Gets or sets the valid orders by.
@@ -70,77 +70,6 @@ namespace Beto.Core.Web.Api
         /// <value>
         /// The valid orders by.
         /// </value>
-        protected string[] ValidOrdersBy { get; set; }
-
-        /// <summary>
-        /// Returns true if ... is valid.
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
-        /// </returns>
-        public virtual bool IsValid()
-        {
-            this.GeneralValidations();
-            return this.errors == null || this.errors.Count == 0;
-        }
-
-        /// <summary>
-        /// Adds a bad argument error
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="message">The message.</param>
-        protected void AddErrorBadArgument(string target, string message)
-        {
-            this.AddError("BadArgument", message, target);
-        }
-
-        /// <summary>
-        /// Adds the error.
-        /// </summary>
-        /// <typeparam name="T">the error type enumerator</typeparam>
-        /// <param name="code">The code.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="target">The target.</param>
-        protected void AddError<T>(T code, string message, string target = null)
-        {
-            this.AddError(code.ToString(), message, target);
-        }
-
-        /// <summary>
-        /// Adds the error.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="target">The target.</param>
-        protected void AddError(string code, string message, string target = null)
-        {
-            this.Errors.Add(new ApiErrorModel()
-            {
-                Code = code,
-                Target = target,
-                Message = message
-            });
-        }
-
-        /// <summary>
-        /// General the validations.
-        /// </summary>
-        protected void GeneralValidations()
-        {
-            if (this.PageSize > this.MaxPageSize)
-            {
-                this.AddError("BadArgument", $"Tamaño máximo de paginación excedido. El máximo es {this.MaxPageSize}", "PageSize");
-            }
-
-            if (this.Page < 0)
-            {
-                this.AddError("BadArgument", "La pagina debe ser mayor a 0", "Page");
-            }
-
-            if (!string.IsNullOrEmpty(this.OrderBy) && !this.ValidOrdersBy.Select(c => c.ToLower()).Contains(this.OrderBy.ToLower()))
-            {
-                this.AddError("BadArgument", $"El parametro orderBy no es valido. Las opciones son: {string.Join(",", this.ValidOrdersBy)}", "OrderBy");
-            }
-        }
+        public string[] ValidOrdersBy { get; protected set; }
     }
 }
