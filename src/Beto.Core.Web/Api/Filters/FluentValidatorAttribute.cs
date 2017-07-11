@@ -1,10 +1,24 @@
-﻿namespace Beto.Core.Web.Api.Filters
+﻿//-----------------------------------------------------------------------
+// <copyright file="FluentValidatorAttribute.cs" company="Gabriel Castillo">
+//     Company copyright tag.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Beto.Core.Web.Api.Filters
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
+    /// <summary>
+    /// A fluent validator filter which allow responding with a Bad Request when the model is wrong formed
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute" />
     public class FluentValidatorAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        /// On action executing
+        /// </summary>
+        /// <param name="context">the context</param>
+        /// <inheritdoc />
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)

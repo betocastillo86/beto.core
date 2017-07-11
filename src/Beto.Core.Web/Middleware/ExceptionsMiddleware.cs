@@ -15,7 +15,7 @@ namespace Beto.Core.Web.Middleware
     using Newtonsoft.Json.Serialization;
 
     /// <summary>
-    /// Middleware for responding Api Requests and register errors
+    /// Middleware for responding API Requests and register errors
     /// </summary>
     public sealed class ExceptionsMiddleware
     {

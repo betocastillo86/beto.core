@@ -16,9 +16,9 @@ namespace Beto.Core.Web.Api.Models
         /// <summary>
         /// Adds the base filter validations.
         /// </summary>
-        /// <typeparam name="T">Base filter models</typeparam>
+        /// <typeparam name="T">a Base filter model</typeparam>
         /// <param name="baseFilter">The base filter.</param>
-        public static void AddBaseFilterValidations<T>(this AbstractValidator<T> baseFilter) where T: BaseFilterModel
+        public static void AddBaseFilterValidations<T>(this AbstractValidator<T> baseFilter) where T : BaseFilterModel
         {
             baseFilter.RuleFor(c => c.PageSize)
                 .LessThanOrEqualTo(c => c.MaxPageSize)
