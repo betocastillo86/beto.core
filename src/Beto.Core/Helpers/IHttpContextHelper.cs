@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IHttpContextHelpers.cs" company="Gabriel Castillo">
+// <copyright file="IHttpContextHelper.cs" company="Gabriel Castillo">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,7 +8,7 @@ namespace Beto.Core.Helpers
     /// <summary>
     /// Interface for Context Helpers
     /// </summary>
-    public interface IHttpContextHelpers
+    public interface IHttpContextHelper
     {
         /// <summary>
         /// Gets the current <c>ip</c> address.

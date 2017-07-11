@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="HttpContextHelpers.cs" company="Gabriel Castillo">
+// <copyright file="HttpContextHelper.cs" company="Gabriel Castillo">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,8 +11,8 @@ namespace Beto.Core.Helpers
     /// <summary>
     /// Http Context Helpers
     /// </summary>
-    /// <seealso cref="Beto.Core.Helpers.IHttpContextHelpers" />
-    public class HttpContextHelpers : IHttpContextHelpers
+    /// <seealso cref="Beto.Core.Helpers.IHttpContextHelper" />
+    public class HttpContextHelper : IHttpContextHelper
     {
         /// <summary>
         /// The accessor
@@ -20,10 +20,10 @@ namespace Beto.Core.Helpers
         private readonly IHttpContextAccessor accessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpContextHelpers"/> class.
+        /// Initializes a new instance of the <see cref="HttpContextHelper"/> class.
         /// </summary>
         /// <param name="accessor">The accessor.</param>
-        public HttpContextHelpers(IHttpContextAccessor accessor)
+        public HttpContextHelper(IHttpContextAccessor accessor)
         {
             this.accessor = accessor;
         }
