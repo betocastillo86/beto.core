@@ -6,6 +6,7 @@
 namespace Beto.Core.Web.Files
 {
     using System;
+    using Beto.Core.Data.Entities;
 
     /// <summary>
     /// Interface of file helpers

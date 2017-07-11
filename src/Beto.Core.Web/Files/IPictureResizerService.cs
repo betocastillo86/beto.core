@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Beto.Core.Web.Files
 {
+    using Beto.Core.Data.Entities;
+
     /// <summary>
     /// Interface for resizing Images
     /// </summary>
