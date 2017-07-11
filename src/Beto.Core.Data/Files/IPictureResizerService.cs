@@ -3,7 +3,7 @@
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Beto.Core.Web.Files
+namespace Beto.Core.Data.Files
 {
     using Beto.Core.Data.Entities;
 
