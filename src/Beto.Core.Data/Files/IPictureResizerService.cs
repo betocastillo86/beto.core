@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 namespace Beto.Core.Data.Files
 {
-    using Beto.Core.Data.Entities;
-
     /// <summary>
     /// Interface for resizing Images
     /// </summary>
@@ -16,9 +14,9 @@ namespace Beto.Core.Data.Files
         /// Resizes the picture.
         /// </summary>
         /// <param name="resizedPath">The resized path.</param>
-        /// <param name="file">The file.</param>
+        /// <param name="fullPath">The file.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        void ResizePicture(string resizedPath, IFileEntity file, int width, int height);
+        void ResizePicture(string resizedPath, string fullPath, int width, int height);
     }
 }
