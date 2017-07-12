@@ -29,44 +29,45 @@ namespace Beto.Core.Data.Configuration
         private readonly ICacheManager cacheManager;
 
         /// <summary>
+        /// The context
+        /// </summary>
+        private readonly IDbContext context;
+
+        /// <summary>
         /// The publisher
         /// </summary>
         private readonly IPublisher publisher;
 
         /// <summary>
-        /// The system setting repository
-        /// </summary>
-        private readonly IRepository<ISettingEntity> settingRepository;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CoreSettingService"/> class.
         /// </summary>
-        /// <param name="settingRepository">The setting repository.</param>
+        /// <param name="context">The context.</param>
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="publisher">The publisher.</param>
         public CoreSettingService(
-            IRepository<ISettingEntity> settingRepository,
+            IDbContext context,
             ICacheManager cacheManager,
             IPublisher publisher)
         {
-            this.settingRepository = settingRepository;
+            this.context = context;
             this.cacheManager = cacheManager;
             this.publisher = publisher;
         }
 
         /// <summary>
-        /// Gets the specified key.
+        /// Gets the asynchronous.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         /// <param name="page">The page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>
-        /// the list of settings
+        /// the settings
         /// </returns>
-        public async Task<IPagedList<ISettingEntity>> GetAsync(string key = null, string value = null, int page = 0, int pageSize = int.MaxValue)
+        public async Task<IPagedList<TEntity>> GetAsync<TEntity>(string key = null, string value = null, int page = 0, int pageSize = int.MaxValue) where TEntity : class, ISettingEntity
         {
-            var query = this.settingRepository.Table;
+            var query = this.context.Set<TEntity>().AsQueryable();
 
             if (!string.IsNullOrEmpty(key))
             {
@@ -78,32 +79,36 @@ namespace Beto.Core.Data.Configuration
                 query = query.Where(c => c.Value.Contains(value));
             }
 
-            return await new PagedList<ISettingEntity>().Async(query, page, pageSize);
+            return await new PagedList<TEntity>().Async(query, page, pageSize);
         }
 
         /// <summary>
         /// Gets the by key.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="keyword">The keyword.</param>
-        /// <returns>the setting</returns>
-        public ISettingEntity GetByKey(string keyword)
+        /// <returns>
+        /// The setting
+        /// </returns>
+        public TEntity GetByKey<TEntity>(string keyword) where TEntity : class, ISettingEntity
         {
-            return this.settingRepository.Table
+            return this.context.Set<TEntity>().AsQueryable()
                 .FirstOrDefault(c => c.Name.Equals(keyword));
         }
 
         /// <summary>
         /// Gets the cached setting.
         /// </summary>
-        /// <typeparam name="T">the type</typeparam>
+        /// <typeparam name="T">the type of data saved on data base</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="key">The key.</param>
         /// <returns>
-        /// the value of the key typed
+        /// the data saved
         /// </returns>
-        public T GetCachedSetting<T>(string key)
+        public T GetCachedSetting<T, TEntity>(string key) where TEntity : class, ISettingEntity
         {
             string value = string.Empty;
-            if (this.GetAllCachedSettings().TryGetValue(key, out value))
+            if (this.GetAllCachedSettings<TEntity>().TryGetValue(key, out value))
             {
                 TypeConverter destinationConverter = TypeDescriptor.GetConverter(typeof(T));
                 return (T)destinationConverter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, value);
@@ -117,13 +122,14 @@ namespace Beto.Core.Data.Configuration
         /// <summary>
         /// Updates the specified setting.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="setting">The setting.</param>
         /// <returns>
         /// the task
         /// </returns>
-        public async Task Update(ISettingEntity setting)
+        public async Task Update<TEntity>(TEntity setting) where TEntity : class, ISettingEntity
         {
-            await this.settingRepository.UpdateAsync(setting);
+            await this.context.SaveChangesAsync();
 
             await this.publisher.EntityUpdated(setting);
         }
@@ -131,15 +137,16 @@ namespace Beto.Core.Data.Configuration
         /// <summary>
         /// Gets all cached settings.
         /// </summary>
-        /// <returns>The list of settings</returns>
-        protected IDictionary<string, string> GetAllCachedSettings()
+        /// <typeparam name="T">the entity type</typeparam>
+        /// <returns>the settings cached</returns>
+        protected IDictionary<string, string> GetAllCachedSettings<T>() where T : class, ISettingEntity
         {
             var allKeys = this.cacheManager.Get(
                 settingsGelAll,
                 () =>
                 {
                     var dictionarySettings = new Dictionary<string, string>();
-                    foreach (var setting in this.GetAsync().Result)
+                    foreach (var setting in this.GetAsync<T>().Result)
                     {
                         dictionarySettings.Add(setting.Name, setting.Value);
                     }
