@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ExceptionsMiddleware.cs" company="Gabriel Castillo">
+// <copyright file="GeneratedAuthenticationToken.cs" company="Gabriel Castillo">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
