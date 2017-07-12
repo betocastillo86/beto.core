@@ -23,7 +23,7 @@ namespace Beto.Core.Data.Files
         /// <summary>
         /// The picture resizer service
         /// </summary>
-        private readonly IPictureResizerService pictureResizerService;
+        private readonly ICorePictureResizerService pictureResizerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesHelper"/> class.
@@ -31,7 +31,7 @@ namespace Beto.Core.Data.Files
         /// <param name="pictureResizerService">The picture resizer service.</param>
         /// <param name="hostingEnvironment">The hosting environment.</param>
         public FilesHelper(
-            IPictureResizerService pictureResizerService,
+            ICorePictureResizerService pictureResizerService,
             IHostingEnvironment hostingEnvironment)
         {
             this.pictureResizerService = pictureResizerService;
@@ -202,7 +202,8 @@ namespace Beto.Core.Data.Files
 
             if (this.IsImageExtension(fullPath))
             {
-                this.pictureResizerService.ResizePicture(fullPath, file, resizeWidth, resizeHeight);
+                // Resizes the image with the same name
+                this.pictureResizerService.ResizePicture(fullPath, fullPath, resizeWidth, resizeHeight);
             }
             else
             {
