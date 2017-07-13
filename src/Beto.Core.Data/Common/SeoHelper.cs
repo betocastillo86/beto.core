@@ -10,9 +10,13 @@ namespace Beto.Core.Data.Common
     using System.Text;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// SEO Helper
+    /// </summary>
+    /// <seealso cref="Beto.Core.Data.Common.ISeoHelper" />
     public class SeoHelper : ISeoHelper
     {
-        // <summary>
+        /// <summary>
         /// Generates the name of the friendly.
         /// </summary>
         /// <param name="name">The name.</param>
