@@ -18,5 +18,14 @@ namespace Beto.Core.Data.Files
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         void ResizePicture(string resizedPath, string originalPath, int width, int height);
+
+        /// <summary>
+        /// Resizes the picture.
+        /// </summary>
+        /// <param name="contentFile">The content file.</param>
+        /// <param name="resizedPath">The resized path.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        void ResizePicture(byte[] contentFile, string resizedPath, int width, int height);
     }
 }
