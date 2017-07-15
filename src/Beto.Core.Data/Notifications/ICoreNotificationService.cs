@@ -32,7 +32,9 @@ namespace Beto.Core.Data.Notifications
             INotificationEntity notification,
             string targetUrl,
             IList<NotificationParameter> parameters,
-            NotificationSettings settings) where TSystemNotification : class, ISystemNotificationEntity where TEmailNotification : class, IEmailNotificationEntity;
+            NotificationSettings settings)
+            where TSystemNotification : class, ISystemNotificationEntity, new()
+            where TEmailNotification : class, IEmailNotificationEntity, new();
 
         /// <summary>
         /// News the email notification.
@@ -51,6 +53,7 @@ namespace Beto.Core.Data.Notifications
             INotificationEntity notification,
             string targetUrl,
             IList<NotificationParameter> parameters,
-            NotificationSettings settings) where TEmailNotification : class, IEmailNotificationEntity;
+            NotificationSettings settings)
+            where TEmailNotification : class, IEmailNotificationEntity, new();
     }
 }

@@ -45,7 +45,14 @@ namespace Beto.Core.Data.Notifications
         /// <returns>
         /// the task
         /// </returns>
-        public async Task NewEmailNotification<TEmailNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings) where TEmailNotification : class, IEmailNotificationEntity
+        public async Task NewEmailNotification<TEmailNotification>(
+            IList<IUserEntity> users,
+            IUserEntity userTriggerEvent,
+            INotificationEntity notification,
+            string targetUrl,
+            IList<NotificationParameter> parameters,
+            NotificationSettings settings)
+            where TEmailNotification : class, IEmailNotificationEntity, new()
         {
             await this.NewNotification<DefaultSystemNotification, TEmailNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
@@ -65,8 +72,8 @@ namespace Beto.Core.Data.Notifications
         /// the task
         /// </returns>
         public async Task NewNotification<TSystemNotification, TEmailNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
-            where TSystemNotification : class, ISystemNotificationEntity
-            where TEmailNotification : class, IEmailNotificationEntity
+            where TSystemNotification : class, ISystemNotificationEntity, new()
+            where TEmailNotification : class, IEmailNotificationEntity, new()
         {
             await this.SaveNewNotification<TSystemNotification, TEmailNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
@@ -95,7 +102,7 @@ namespace Beto.Core.Data.Notifications
            string siteUrl,
            string baseHtml,
            bool isManual)
-            where TEmailNotification : IEmailNotificationEntity
+            where TEmailNotification : class, IEmailNotificationEntity, new()
         {
             string fromName = string.Empty;
             string subject = string.Empty;
@@ -125,7 +132,7 @@ namespace Beto.Core.Data.Notifications
                 .Replace("%%Body%%", message)
                 .Replace("%%RootUrl%%", siteUrl);
 
-            var emailNotification = default(TEmailNotification);
+            var emailNotification = new TEmailNotification();
             emailNotification.To = user.Email;
             emailNotification.ToName = user.Name;
             emailNotification.Subject = subject;
@@ -178,8 +185,8 @@ namespace Beto.Core.Data.Notifications
             string targetUrl,
             IList<NotificationParameter> parameters,
             NotificationSettings settings)
-            where TSystemNotification : class, ISystemNotificationEntity
-            where TEmailNotification : class, IEmailNotificationEntity
+            where TSystemNotification : class, ISystemNotificationEntity, new()
+            where TEmailNotification : class, IEmailNotificationEntity, new()
         {
             ////En los casos manuales no las busca, sino que quedan quemadas
             ////var notification = type != NotificationType.Manual ? this.GetCachedNotification(type) : new Notification() { Active = true, IsEmail = true };
