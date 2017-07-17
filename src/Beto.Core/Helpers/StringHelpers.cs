@@ -9,6 +9,7 @@ namespace Beto.Core.Helpers
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// String Helpers
@@ -92,6 +93,22 @@ namespace Beto.Core.Helpers
         public static string ToSha1(string text, string salt)
         {
             return ToSha1($"{text}.{salt}");
+        }
+
+        /// <summary>
+        /// To the XXS filtered string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>the validated string</returns>
+        public static string ToXXSFilteredString(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return value;
+            }
+
+            var rgx = new Regex("(<|>|/|\\\"|;|:|\\)|\\()");
+            return rgx.Replace(value, string.Empty);
         }
     }
 }
