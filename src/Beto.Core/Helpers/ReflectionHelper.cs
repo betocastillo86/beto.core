@@ -20,14 +20,15 @@ namespace Beto.Core.Helpers
         /// Gets the types on project. <![CDATA[Retorna los tipos existentes en la solución que implementen determinada interfaz]]>
         /// </summary>
         /// <param name="typeSearched">The type searched.</param>
+        /// <param name="projectalias">searches in DLLs that contain this word</param>
         /// <returns>the value</returns>
-        public static IEnumerable<Type> GetTypesOnProject(Type typeSearched)
+        public static IEnumerable<Type> GetTypesOnProject(Type typeSearched, string projectalias)
         {
             var deps = DependencyContext.Default;
 
             var assemblies = new List<Assembly>();
 
-            foreach (var library in deps.RuntimeLibraries.Where(c => c.Name.ToLower().Contains("huellitas")))
+            foreach (var library in deps.RuntimeLibraries.Where(c => c.Name.ToLower().Contains(projectalias)))
             {
                 var assembly = Assembly.Load(new AssemblyName(library.Name));
                 assemblies.Add(assembly);
