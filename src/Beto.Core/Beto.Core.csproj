@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="microsoft.extensions.caching.abstractions" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.2" />
   </ItemGroup>
 
 </Project>
