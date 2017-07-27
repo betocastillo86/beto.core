@@ -17,7 +17,8 @@ namespace Beto.Core.Data.Files
         /// <param name="originalPath">The original path.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        void ResizePicture(string resizedPath, string originalPath, int width, int height);
+        /// <param name="mode">the mode of resizing</param>
+        void ResizePicture(string resizedPath, string originalPath, int width, int height, ResizeMode mode = ResizeMode.Crop);
 
         /// <summary>
         /// Resizes the picture.
@@ -26,6 +27,7 @@ namespace Beto.Core.Data.Files
         /// <param name="resizedPath">The resized path.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        void ResizePicture(byte[] contentFile, string resizedPath, int width, int height);
+        /// <param name="mode">the mode of resizing</param>
+        void ResizePicture(byte[] contentFile, string resizedPath, int width, int height, ResizeMode mode = ResizeMode.Crop);
     }
 }
