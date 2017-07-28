@@ -6,9 +6,11 @@
 namespace Beto.Core.Data.Common
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
 
     /// <summary>
     /// SEO Helper
@@ -66,6 +68,37 @@ namespace Beto.Core.Data.Common
             }
 
             return friendlyname;
+        }
+
+        /// <summary>
+        /// Gets the site map XML.
+        /// </summary>
+        /// <param name="routes">The routes.</param>
+        /// <returns>
+        /// the XML Site map
+        /// </returns>
+        public string GetSiteMapXml(IList<SitemapRoute> routes)
+        {
+            var elements = new List<XElement>();
+
+            foreach (var route in routes)
+            {
+                var children = new List<XElement>();
+                children.Add(new XElement("loc", route.Url));
+                children.Add(new XElement("changefreq", "weekly"));
+
+                if (route.ModifiedDate.HasValue)
+                {
+                    children.Add(new XElement("lastmod", route.ModifiedDate));
+                }
+
+                var element = new XElement("url", children);
+                elements.Add(element);
+            }
+
+            var document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), new XElement("urlset", elements));
+
+            return document.ToString();
         }
     }
 }

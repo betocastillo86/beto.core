@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Beto.Core.Data.Common
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -20,5 +21,12 @@ namespace Beto.Core.Data.Common
         /// <param name="maxLength">The maximum length.</param>
         /// <returns>the value</returns>
         string GenerateFriendlyName(string name, IQueryable<ISeoEntity> query = null, int maxLength = 280);
+
+        /// <summary>
+        /// Gets the site map XML.
+        /// </summary>
+        /// <param name="routes">The routes.</param>
+        /// <returns>the XML Site map</returns>
+        string GetSiteMapXml(IList<SitemapRoute> routes);
     }
 }
