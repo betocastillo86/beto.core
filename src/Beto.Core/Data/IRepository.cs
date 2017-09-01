@@ -24,6 +24,14 @@ namespace Beto.Core.Data
         IQueryable<T> Table { get; }
 
         /// <summary>
+        /// Gets the table no tracking.
+        /// </summary>
+        /// <value>
+        /// The table no tracking.
+        /// </value>
+        IQueryable<T> TableNoTracking { get; }
+
+        /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>

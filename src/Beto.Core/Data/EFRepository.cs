@@ -38,15 +38,20 @@ namespace Beto.Core.Data
         }
 
         /// <summary>
-        /// Gets a table
+        /// Gets the table.
         /// </summary>
-        public virtual IQueryable<T> Table
-        {
-            get
-            {
-                return this.Entities;
-            }
-        }
+        /// <value>
+        /// The table.
+        /// </value>
+        public virtual IQueryable<T> Table => this.Entities;
+
+        /// <summary>
+        /// Gets the table no tracking.
+        /// </summary>
+        /// <value>
+        /// The table no tracking.
+        /// </value>
+        public IQueryable<T> TableNoTracking => this.Entities.AsNoTracking();
 
         /// <summary>
         /// Gets the entities.
