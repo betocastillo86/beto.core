@@ -9,6 +9,7 @@ namespace Beto.Core.Data
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;
 
     /// <summary>
@@ -43,5 +44,12 @@ namespace Beto.Core.Data
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>the table</returns>
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
+        /// <summary>
+        /// Entries the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>the entry</returns>
+        EntityEntry Entry(object entity);
     }
 }

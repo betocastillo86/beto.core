@@ -104,6 +104,7 @@ namespace Beto.Core.Data
 
             foreach (var entity in entities)
             {
+                this.context.Entry(entity).State = EntityState.Deleted;
                 this.Entities.Remove(entity);
             }
 
@@ -123,6 +124,7 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
+            this.context.Entry(entity).State = EntityState.Deleted;
             this.Entities.Remove(entity);
 
             return await this.context.SaveChangesAsync();
@@ -140,6 +142,7 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
+            this.context.Entry(entity).State = EntityState.Deleted;
             this.Entities.Add(entity);
 
             this.context.SaveChanges();
@@ -219,6 +222,8 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
+            this.context.Entry(entity).State = EntityState.Modified;
+
             return this.context.SaveChanges();
         }
 
@@ -231,6 +236,11 @@ namespace Beto.Core.Data
             if (entities == null)
             {
                 throw new ArgumentNullException("entities");
+            }
+
+            foreach (var entity in entities)
+            {
+                this.context.Entry(entity).State = EntityState.Modified;
             }
 
             this.context.SaveChangesAsync();
@@ -251,6 +261,8 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
+            this.context.Entry(entity).State = EntityState.Modified;
+
             return await this.context.SaveChangesAsync();
         }
 
@@ -267,6 +279,11 @@ namespace Beto.Core.Data
             if (entities == null)
             {
                 throw new ArgumentNullException("entities");
+            }
+
+            foreach (var entity in entities)
+            {
+                this.context.Entry(entity).State = EntityState.Modified;
             }
 
             await this.context.SaveChangesAsync();
