@@ -85,6 +85,8 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
+            this.context.Entry(entity).State = EntityState.Deleted;
+
             this.Entities.Remove(entity);
 
             return this.context.SaveChanges();
@@ -142,7 +144,6 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entity");
             }
 
-            this.context.Entry(entity).State = EntityState.Deleted;
             this.Entities.Add(entity);
 
             this.context.SaveChanges();
