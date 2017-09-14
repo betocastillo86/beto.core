@@ -162,5 +162,19 @@ namespace Beto.Core.Web.Api.Controllers
         }
 
         #endregion Ok
+
+        #region Created        
+        /// <summary>
+        /// The own created method
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns>the action</returns>
+        protected IActionResult Created(string name, int id)
+        {
+            var uri = this.Url.Link(name, new { id = id });
+            return this.Created(uri, new { Id = id });
+        }
+        #endregion
     }
 }
