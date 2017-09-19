@@ -28,7 +28,7 @@ namespace Beto.Core.Helpers
 
             var assemblies = new List<Assembly>();
 
-            foreach (var library in deps.RuntimeLibraries.Where(c => c.Name.ToLower().Contains(projectalias)))
+            foreach (var library in deps.RuntimeLibraries.Where(c => c.Name.ToLower().Contains(projectalias.ToLower())))
             {
                 var assembly = Assembly.Load(new AssemblyName(library.Name));
                 assemblies.Add(assembly);
