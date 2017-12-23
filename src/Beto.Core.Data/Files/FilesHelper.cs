@@ -113,10 +113,12 @@ namespace Beto.Core.Data.Files
         {
             var fileName = $"/img/content/{this.GetFolderName(file)}/{this.GetFileNameWithSize(file, width, height)}";
 
-            if (forceResize && !System.IO.File.Exists(fileName))
+            var physicalPath = this.GetPhysicalPath(file, width, height);
+
+            if (forceResize && !System.IO.File.Exists(physicalPath))
             {
                 var originalPath = this.GetPhysicalPath(file);
-                this.pictureResizerService.ResizePicture(fileName, originalPath, width, height, ResizeMode.Crop);
+                this.pictureResizerService.ResizePicture(physicalPath, originalPath, width, height, ResizeMode.Crop);
             }
 
             if (contentUrlFunction != null)
@@ -209,7 +211,7 @@ namespace Beto.Core.Data.Files
             if (this.IsImageExtension(fullPath))
             {
                 // Resizes the image with the same name
-                this.pictureResizerService.ResizePicture(bytes, fullPath, resizeWidth, resizeHeight, ResizeMode.Crop);
+                this.pictureResizerService.ResizePicture(bytes, fullPath, resizeWidth, resizeHeight, ResizeMode.Max);
             }
             else
             {
