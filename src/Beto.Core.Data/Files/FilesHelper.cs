@@ -113,7 +113,7 @@ namespace Beto.Core.Data.Files
         {
             var fileName = $"/img/content/{this.GetFolderName(file)}/{this.GetFileNameWithSize(file, width, height)}";
 
-            var physicalPath = this.GetPhysicalPath(file, width, height);
+            var physicalPath = string.Concat(this.hostingEnvironment.WebRootPath, fileName);
 
             if (forceResize && !System.IO.File.Exists(physicalPath))
             {
