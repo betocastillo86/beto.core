@@ -23,6 +23,16 @@ namespace Beto.Core.Data.Files
         /// <summary>
         /// Resizes with border
         /// </summary>
-        BoxPad
+        BoxPad,
+
+        /// <summary>
+        /// The maximum value resize
+        /// </summary>
+        Max,
+
+        /// <summary>
+        /// The minimum value resize
+        /// </summary>
+        Min
     }
 }
