@@ -113,14 +113,14 @@ namespace Beto.Core.Data.Files
         {
             var fileName = $"/img/content/{this.GetFolderName(file)}/{this.GetFileNameWithSize(file, width, height)}";
 
+            if (forceResize && !System.IO.File.Exists(fileName))
+            {
+                var originalPath = this.GetPhysicalPath(file);
+                this.pictureResizerService.ResizePicture(fileName, originalPath, width, height, ResizeMode.Crop);
+            }
+
             if (contentUrlFunction != null)
             {
-                if (forceResize && !System.IO.File.Exists(fileName))
-                {
-                    var originalPath = this.GetPhysicalPath(file);
-                    this.pictureResizerService.ResizePicture(fileName, originalPath, width, height, ResizeMode.Crop);
-                }
-
                 return contentUrlFunction(fileName);
             }
             else
