@@ -109,12 +109,18 @@ namespace Beto.Core.Data.Files
         /// <returns>
         /// the path
         /// </returns>
-        public string GetFullPath(IFileEntity file, Func<string, string> contentUrlFunction = null, int width = 0, int height = 0)
+        public string GetFullPath(IFileEntity file, Func<string, string> contentUrlFunction = null, int width = 0, int height = 0, bool forceResize = false)
         {
             var fileName = $"/img/content/{this.GetFolderName(file)}/{this.GetFileNameWithSize(file, width, height)}";
 
             if (contentUrlFunction != null)
             {
+                if (forceResize && !System.IO.File.Exists(fileName))
+                {
+                    var originalPath = this.GetPhysicalPath(file);
+                    this.pictureResizerService.ResizePicture(fileName, originalPath, width, height, ResizeMode.Crop);
+                }
+
                 return contentUrlFunction(fileName);
             }
             else

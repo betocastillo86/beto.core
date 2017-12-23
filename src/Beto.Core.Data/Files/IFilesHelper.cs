@@ -35,8 +35,9 @@ namespace Beto.Core.Data.Files
         /// <param name="contentUrlFunction">The content URL function.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="forceResize">forces the resize</param>
         /// <returns>the path</returns>
-        string GetFullPath(IFileEntity file, Func<string, string> contentUrlFunction = null, int width = 0, int height = 0);
+        string GetFullPath(IFileEntity file, Func<string, string> contentUrlFunction = null, int width = 0, int height = 0, bool forceResize = false);
 
         /// <summary>
         /// Gets the physical path.
