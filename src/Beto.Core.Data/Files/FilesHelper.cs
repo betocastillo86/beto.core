@@ -209,7 +209,7 @@ namespace Beto.Core.Data.Files
             if (this.IsImageExtension(fullPath))
             {
                 // Resizes the image with the same name
-                this.pictureResizerService.ResizePicture(bytes, fullPath, resizeWidth, resizeHeight, ResizeMode.Pad);
+                this.pictureResizerService.ResizePicture(bytes, fullPath, resizeWidth, resizeHeight, ResizeMode.Crop);
             }
             else
             {
