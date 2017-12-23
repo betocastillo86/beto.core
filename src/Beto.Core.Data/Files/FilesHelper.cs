@@ -106,6 +106,7 @@ namespace Beto.Core.Data.Files
         /// <param name="contentUrlFunction">The content URL function.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="forceResize">forces the resize</param>
         /// <returns>
         /// the path
         /// </returns>
