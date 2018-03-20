@@ -238,7 +238,7 @@ namespace Beto.Core.Data.Notifications
                     ////Si la notificación es del sistema la envia
                     if (notification.IsSystem)
                     {
-                        var systemNotification = default(TSystemNotification);
+                        var systemNotification = new TSystemNotification();
                         systemNotification.UserId = user.Id;
                         systemNotification.Value = this.GetStringFormatted(notification.SystemText, parameters);
                         systemNotification.TargetUrl = targetUrl;
