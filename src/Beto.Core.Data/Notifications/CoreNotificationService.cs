@@ -137,7 +137,7 @@ namespace Beto.Core.Data.Notifications
             emailNotification.ToName = user.Name;
             emailNotification.Subject = subject;
             emailNotification.Body = body;
-            emailNotification.CreatedDate = DateTime.Now;
+            emailNotification.CreatedDate = DateTime.UtcNow;
             emailNotification.Cc = null;
             emailNotification.ScheduledDate = null;
             emailNotification.SentDate = null;
@@ -242,7 +242,7 @@ namespace Beto.Core.Data.Notifications
                         systemNotification.UserId = user.Id;
                         systemNotification.Value = this.GetStringFormatted(notification.SystemText, parameters);
                         systemNotification.TargetUrl = targetUrl;
-                        systemNotification.CreationDate = DateTime.Now;
+                        systemNotification.CreationDate = DateTime.UtcNow;
                         systemNotification.Seen = false;
 
                         ////Inserta la notificación de este tipo
