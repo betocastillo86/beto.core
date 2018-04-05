@@ -11,6 +11,7 @@ namespace Beto.Core.Data.Notifications
     using System.Text;
     using System.Threading.Tasks;
     using Beto.Core.Data.Users;
+    using Beto.Core.EventPublisher;
 
     /// <summary>
     /// Core Notification Service
@@ -24,12 +25,21 @@ namespace Beto.Core.Data.Notifications
         private readonly IDbContext context;
 
         /// <summary>
+        /// The publisher
+        /// </summary>
+        private readonly IPublisher publisher;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CoreNotificationService"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public CoreNotificationService(IDbContext context)
+        /// <param name="publisher">The publisher</param>
+        public CoreNotificationService(
+            IDbContext context,
+            IPublisher publisher)
         {
             this.context = context;
+            this.publisher = publisher;
         }
 
         /// <summary>
@@ -286,6 +296,8 @@ namespace Beto.Core.Data.Notifications
                     }
 
                     await this.context.SaveChangesAsync();
+
+                    await this.publisher.EntitiesInserted(systemNotificationsToInsert);
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace Beto.Core.Data.Notifications
     /// <summary>
     /// Interface Email Notification Entity
     /// </summary>
-    public interface IEmailNotificationEntity
+    public interface IEmailNotificationEntity : IEntity
     {
         /// <summary>
         /// Gets or sets to.

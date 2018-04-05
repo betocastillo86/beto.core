@@ -10,7 +10,7 @@ namespace Beto.Core.Data.Notifications
     /// <summary>
     /// Interface of System Notification Entity
     /// </summary>
-    public interface ISystemNotificationEntity
+    public interface ISystemNotificationEntity : IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.

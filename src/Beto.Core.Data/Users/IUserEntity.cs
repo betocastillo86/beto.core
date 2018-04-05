@@ -8,7 +8,7 @@ namespace Beto.Core.Data.Users
     /// <summary>
     /// Interface of user entity
     /// </summary>
-    public interface IUserEntity
+    public interface IUserEntity : IEntity
     {
         /// <summary>
         /// Gets the identifier.

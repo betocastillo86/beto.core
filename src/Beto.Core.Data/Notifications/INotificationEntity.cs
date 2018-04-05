@@ -8,7 +8,7 @@ namespace Beto.Core.Data.Notifications
     /// <summary>
     /// Interface of notification Entity
     /// </summary>
-    public interface INotificationEntity
+    public interface INotificationEntity : IEntity
     {
         /// <summary>
         /// Gets a value indicating whether this <see cref="INotificationEntity"/> is active.
