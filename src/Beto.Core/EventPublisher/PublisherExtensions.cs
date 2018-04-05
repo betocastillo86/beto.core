@@ -23,10 +23,7 @@ namespace Beto.Core.EventPublisher
         /// <returns>the task</returns>
         public static async Task EntitiesDeleted<T>(this IPublisher eventPublisher, IList<T> list) where T : IEntity
         {
-            foreach (var entity in list)
-            {
-                await eventPublisher.Publish(new EntityDeletedMessage<T>(entity));
-            }
+            await eventPublisher.Publish(new EntitiesDeletedMessage<T>(list));
         }
 
         /// <summary>
@@ -38,10 +35,7 @@ namespace Beto.Core.EventPublisher
         /// <returns>the task</returns>
         public static async Task EntitiesInserted<T>(this IPublisher eventPublisher, IList<T> list) where T : IEntity
         {
-            foreach (var entity in list)
-            {
-                await eventPublisher.Publish(new EntityInsertedMessage<T>(entity));
-            }
+            await eventPublisher.Publish(new EntitiesInsertedMessage<T>(list));
         }
 
         /// <summary>
@@ -54,10 +48,7 @@ namespace Beto.Core.EventPublisher
         /// <returns>the task</returns>
         public static async Task EntitiesUpdated<T>(this IPublisher eventPublisher, IList<T> list, string action = null) where T : IEntity
         {
-            foreach (var entity in list)
-            {
-                await eventPublisher.Publish(new EntityUpdatedMessage<T>(entity, action));
-            }
+            await eventPublisher.Publish(new EntitiesUpdatedMessage<T>(list));
         }
 
         /// <summary>
