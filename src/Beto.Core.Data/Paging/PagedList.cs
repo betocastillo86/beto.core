@@ -151,7 +151,7 @@ namespace Beto.Core.Data
             this.PageSize = pageSize;
             this.TotalPages = this.TotalCount / this.PageSize;
 
-            if (this.TotalPages % this.PageSize > 0)
+            if (this.TotalCount % this.PageSize > 0)
             {
                 this.TotalPages++;
             }
