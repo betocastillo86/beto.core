@@ -121,9 +121,9 @@ namespace Beto.Core.Data.Notifications
             ////Cuando es manual envia otros parametros
             if (isManual)
             {
-                if (string.IsNullOrEmpty(fromName) || string.IsNullOrEmpty(defaultSubject) || string.IsNullOrEmpty(defaultMessage))
+                if (string.IsNullOrEmpty(defaultFromName) || string.IsNullOrEmpty(defaultSubject) || string.IsNullOrEmpty(defaultMessage))
                 {
-                    throw new Exception("fromName or defaultSubject or defaultMessage");
+                    throw new ArgumentNullException("fromName or defaultSubject or defaultMessage");
                 }
 
                 fromName = defaultFromName;

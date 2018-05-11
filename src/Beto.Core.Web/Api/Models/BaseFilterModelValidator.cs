@@ -21,6 +21,7 @@ namespace Beto.Core.Web.Api.Models
         public static void AddBaseFilterValidations<T>(this AbstractValidator<T> baseFilter) where T : BaseFilterModel
         {
             baseFilter.RuleFor(c => c.PageSize)
+                .GreaterThan(0)
                 .LessThanOrEqualTo(c => c.MaxPageSize)
                 .WithMessage(c => $"Tamaño máximo de paginación excedido. El máximo es {c.MaxPageSize}");
 
