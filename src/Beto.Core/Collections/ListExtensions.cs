@@ -7,12 +7,27 @@ namespace Beto.Core.Collections
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// List extension methods
     /// </summary>
     public static class ListExtensions
     {
+        /// <summary>
+        /// For sending the index as a parameter
+        /// </summary>
+        /// <typeparam name="T">the type of the list</typeparam>
+        /// <param name="list">the list</param>
+        /// <param name="action">the method to execute</param>
+        public static void For<T>(this IEnumerable<T> list, Action<T, int> action)
+        {
+            for (int i = 0; i < list.Count(); i++)
+            {
+                action(list.ElementAt(i), i);
+            }
+        }
+
         /// <summary>
         /// Foreaches the specified function with a new list generated from the foreach.
         /// </summary>
