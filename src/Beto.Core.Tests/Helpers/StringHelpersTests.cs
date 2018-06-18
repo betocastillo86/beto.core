@@ -15,6 +15,16 @@ namespace Beto.Core.Tests.Helpers
     public class StringHelpersTests
     {
         /// <summary>
+        /// Removes the diacritics vowels and n without diacritics.
+        /// </summary>
+        [Test]
+        public void RemoveDiacritics_VowelsAndN_WithoutDiacritics()
+        {
+            var response = StringHelpers.RemoveDiacritics("áéíóúÁÉÍÓÚñÑaeiou");
+            Assert.AreEqual("aeiouAEIOUnNaeiou", response);
+        }
+
+        /// <summary>
         /// To the MD5 when call correct value.
         /// </summary>
         [Test]
