@@ -143,6 +143,7 @@ namespace Beto.Core.Data.Configuration
         {
             var allKeys = this.cacheManager.Get(
                 settingsGelAll,
+                5000,
                 () =>
                 {
                     var dictionarySettings = new Dictionary<string, string>();
