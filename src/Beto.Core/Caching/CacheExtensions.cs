@@ -6,6 +6,7 @@
 namespace Beto.Core.Caching
 {
     using System;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Static class Cache Extensions
@@ -42,6 +43,44 @@ namespace Beto.Core.Caching
             }
 
             var result = acquire();
+            if (cacheTime > 0)
+            {
+                cacheManager.Set(key, result, cacheTime);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the asynchronous.
+        /// </summary>
+        /// <typeparam name="T">the type</typeparam>
+        /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="acquire">The acquire.</param>
+        /// <returns>the task</returns>
+        public static async Task<T> GetAsync<T>(this ICacheManager cacheManager, string key, Func<Task<T>> acquire)
+        {
+            return await GetAsync(cacheManager, key, 60, acquire);
+        }
+
+        /// <summary>
+        /// Gets the asynchronous.
+        /// </summary>
+        /// <typeparam name="T">the type</typeparam>
+        /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="cacheTime">The cache time.</param>
+        /// <param name="acquire">The acquire.</param>
+        /// <returns>the task</returns>
+        public static async Task<T> GetAsync<T>(this ICacheManager cacheManager, string key, int cacheTime, Func<Task<T>> acquire)
+        {
+            if (cacheManager.IsSet(key))
+            {
+                return cacheManager.Get<T>(key);
+            }
+
+            var result = await acquire();
             if (cacheTime > 0)
             {
                 cacheManager.Set(key, result, cacheTime);
