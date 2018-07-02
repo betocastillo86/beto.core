@@ -63,7 +63,9 @@ namespace Beto.Core.Web.Middleware
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, ex.ToString());
+                var messageformat = $"[{DateTime.UtcNow}]\n {ex.ToString()} \n Url: {context?.Request?.Query}";
+
+                this.logger.LogError(ex, messageformat);
 
                 var jsonResponse = new ApiErrorModel()
                 {
