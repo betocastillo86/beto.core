@@ -120,6 +120,21 @@ namespace Beto.Core.Data.Configuration
         }
 
         /// <summary>
+        /// Inserts the specified setting.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="setting">The setting.</param>
+        /// <returns>the task</returns>
+        public async Task Insert<TEntity>(TEntity setting) where TEntity : class, ISettingEntity
+        {
+            this.context.Set<TEntity>().Add(setting);
+
+            await this.context.SaveChangesAsync();
+
+            await this.publisher.EntityUpdated(setting);
+        }
+
+        /// <summary>
         /// Updates the specified setting.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>

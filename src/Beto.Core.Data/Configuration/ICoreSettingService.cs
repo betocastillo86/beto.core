@@ -33,14 +33,6 @@ namespace Beto.Core.Data.Configuration
         TEntity GetByKey<TEntity>(string keyword) where TEntity : class, ISettingEntity;
 
         /// <summary>
-        /// Updates the specified setting.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <param name="setting">The setting.</param>
-        /// <returns>the task</returns>
-        Task Update<TEntity>(TEntity setting) where TEntity : class, ISettingEntity;
-
-        /// <summary>
         /// Gets the cached setting.
         /// </summary>
         /// <typeparam name="T">the type of data saved on data base</typeparam>
@@ -48,5 +40,21 @@ namespace Beto.Core.Data.Configuration
         /// <param name="key">The key.</param>
         /// <returns>the data saved</returns>
         T GetCachedSetting<T, TEntity>(string key) where TEntity : class, ISettingEntity;
+
+        /// <summary>
+        /// Inserts the specified setting.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="setting">The setting.</param>
+        /// <returns>the task</returns>
+        Task Insert<TEntity>(TEntity setting) where TEntity : class, ISettingEntity;
+
+        /// <summary>
+        /// Updates the specified setting.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="setting">The setting.</param>
+        /// <returns>the task</returns>
+        Task Update<TEntity>(TEntity setting) where TEntity : class, ISettingEntity;
     }
 }
