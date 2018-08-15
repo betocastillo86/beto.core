@@ -31,7 +31,8 @@ namespace Beto.Core.Web.Api.Models
 
             baseFilter.RuleFor(c => c)
                 .Must(c => string.IsNullOrEmpty(c.OrderBy) || (!string.IsNullOrEmpty(c.OrderBy) && c.ValidOrdersBy.Contains(c.OrderBy)))
-                .WithMessage(c => $"El parametro orderBy no es valido. Las opciones son: {string.Join(",", c.ValidOrdersBy)}");
+                .WithMessage(c => $"El parametro orderBy no es valido. Las opciones son: {string.Join(",", c.ValidOrdersBy)}")
+                .OverridePropertyName("OrderBy");
         }
     }
 }
