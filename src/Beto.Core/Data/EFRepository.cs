@@ -161,10 +161,7 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entities");
             }
 
-            foreach (var entity in entities)
-            {
-                this.Entities.Add(entity);
-            }
+            this.Entities.AddRange(entities);
 
             this.context.SaveChanges();
         }
@@ -184,10 +181,7 @@ namespace Beto.Core.Data
                 throw new ArgumentNullException("entities");
             }
 
-            foreach (var entity in entities)
-            {
-                this.Entities.Add(entity);
-            }
+            await this.Entities.AddRangeAsync(entities);
 
             await this.context.SaveChangesAsync();
         }
