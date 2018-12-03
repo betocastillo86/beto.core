@@ -65,6 +65,7 @@ namespace Beto.Core.Web.Middleware
             {
                 var messageformat = $"[{DateTime.UtcNow}]\n {ex.ToString()} \n Url: {context?.Request?.Query}";
 
+                Console.WriteLine(messageformat);
                 this.logger.LogError(ex, messageformat);
 
                 var jsonResponse = new ApiErrorModel()
