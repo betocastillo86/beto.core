@@ -49,7 +49,7 @@ namespace Beto.Core.Tests.Caching
         }
 
         /// <summary>
-        /// Gets the non existent key returns defalt value.
+        /// Gets the non existent key returns default value.
         /// </summary>
         [Test]
         public void Get_NonExistentKey_ReturnsDefaltValue()

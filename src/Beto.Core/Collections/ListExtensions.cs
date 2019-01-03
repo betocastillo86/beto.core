@@ -29,9 +29,9 @@ namespace Beto.Core.Collections
         }
 
         /// <summary>
-        /// Foreaches the specified function with a new list generated from the foreach.
+        /// Create a foreach the specified function with a new list generated from the foreach.
         /// </summary>
-        /// <typeparam name="T">the element tyep</typeparam>
+        /// <typeparam name="T">the element type</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="list">The list.</param>
         /// <param name="function">The function.</param>
@@ -45,7 +45,7 @@ namespace Beto.Core.Collections
         }
 
         /// <summary>
-        /// Foreaches the specified action.
+        /// Create a foreach the specified action.
         /// </summary>
         /// <typeparam name="T">the element Type</typeparam>
         /// <param name="list">The list.</param>
@@ -59,7 +59,7 @@ namespace Beto.Core.Collections
         }
 
         /// <summary>
-        /// Foreaches the return.
+        /// Create a foreach the return.
         /// </summary>
         /// <typeparam name="T">the type of the list</typeparam>
         /// <param name="list">The list.</param>

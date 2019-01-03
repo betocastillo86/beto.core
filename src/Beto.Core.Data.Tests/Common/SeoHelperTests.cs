@@ -12,7 +12,7 @@ namespace Beto.Core.Data.Tests.Common
     using NUnit.Framework;
 
     /// <summary>
-    /// Seo Helper tests
+    /// SEO Helper tests
     /// </summary>
     [TestFixture]
     public class SeoHelperTests
@@ -23,7 +23,7 @@ namespace Beto.Core.Data.Tests.Common
         private IQueryable<ISeoEntity> queryEntities;
 
         /// <summary>
-        /// The seo helper
+        /// The SEO helper
         /// </summary>
         private SeoHelper seoHelper;
 

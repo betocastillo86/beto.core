@@ -9,7 +9,7 @@ namespace Beto.Core.Web.Tests.Fakes
     using FluentValidation;
 
     /// <summary>
-    /// Base FIlter Model Validator Fake
+    /// Base Filter Model Validator Fake
     /// </summary>
     /// <seealso cref="FluentValidation.AbstractValidator{Beto.Core.Web.Tests.Fakes.BaseFilterModelFake}" />
     public class BaseFilterModalValidatorFake : AbstractValidator<BaseFilterModelFake>

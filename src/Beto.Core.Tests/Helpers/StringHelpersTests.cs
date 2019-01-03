@@ -35,7 +35,7 @@ namespace Beto.Core.Tests.Helpers
         }
 
         /// <summary>
-        /// To the sha1 when call correct value.
+        /// To the SHA1 when call correct value.
         /// </summary>
         [Test]
         public void ToSha1_WhenCall_CorrectValue()
@@ -45,7 +45,7 @@ namespace Beto.Core.Tests.Helpers
         }
 
         /// <summary>
-        /// To the sha1 with salt correct value.
+        /// To the SHA1 with salt correct value.
         /// </summary>
         [Test]
         public void ToSha1_WithSalt_CorrectValue()

@@ -8,7 +8,7 @@ namespace Beto.Core.Web.Tests.Fakes
     using Beto.Core.Web.Api;
 
     /// <summary>
-    /// Base FIlter Model Fake
+    /// Base Filter Model Fake
     /// </summary>
     /// <seealso cref="Beto.Core.Web.Api.BaseFilterModel" />
     public class BaseFilterModelFake : BaseFilterModel

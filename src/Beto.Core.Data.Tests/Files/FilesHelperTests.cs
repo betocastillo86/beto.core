@@ -81,7 +81,7 @@ namespace Beto.Core.Data.Tests.Files
         }
 
         /// <summary>
-        /// Gets the full path with content URL funcion full route.
+        /// Gets the full path with content URL function full route.
         /// </summary>
         [Test]
         public void GetFullPath_WithContentUrlFuncion_FullRoute()
