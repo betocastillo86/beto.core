@@ -22,6 +22,11 @@ namespace Beto.Core.Caching
         private static HashSet<string> currentKeys = new HashSet<string>();
 
         /// <summary>
+        /// The lock object
+        /// </summary>
+        private static object lockObject = new object();
+
+        /// <summary>
         /// The memory cache
         /// </summary>
         private readonly IMemoryCache memoryCache;
@@ -86,8 +91,11 @@ namespace Beto.Core.Caching
         /// <param name="key">The key.</param>
         public void Remove(string key)
         {
-            this.memoryCache.Remove(key);
-            currentKeys.Remove(key);
+            lock (lockObject)
+            {
+                this.memoryCache.Remove(key);
+                currentKeys.Remove(key);
+            }
         }
 
         /// <summary>
@@ -100,17 +108,20 @@ namespace Beto.Core.Caching
 
             var keysToRemove = new List<string>();
 
-            foreach (var key in currentKeys)
+            lock (lockObject)
             {
-                if (regex.IsMatch(key))
+                foreach (var key in currentKeys)
                 {
-                    keysToRemove.Add(key);
+                    if (regex.IsMatch(key))
+                    {
+                        keysToRemove.Add(key);
+                    }
                 }
-            }
 
-            foreach (var keyToRemove in keysToRemove)
-            {
-                this.Remove(keyToRemove);
+                foreach (var keyToRemove in keysToRemove)
+                {
+                    this.Remove(keyToRemove);
+                }
             }
         }
 
@@ -122,8 +133,11 @@ namespace Beto.Core.Caching
         /// <param name="cacheTime">The cache time in minutes.</param>
         public void Set(string key, object data, int cacheTime)
         {
-            this.memoryCache.Set(key, data, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheTime)));
-            currentKeys.Add(key);
+            lock (lockObject)
+            {
+                this.memoryCache.Set(key, data, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(cacheTime)));
+                currentKeys.Add(key);
+            }
         }
     }
 }
