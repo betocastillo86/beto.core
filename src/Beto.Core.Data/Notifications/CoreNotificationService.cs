@@ -13,27 +13,12 @@ namespace Beto.Core.Data.Notifications
     using Beto.Core.Data.Users;
     using Beto.Core.EventPublisher;
 
-    /// <summary>
-    /// Core Notification Service
-    /// </summary>
-    /// <seealso cref="Beto.Core.Data.Notifications.ICoreNotificationService" />
     public class CoreNotificationService : ICoreNotificationService
     {
-        /// <summary>
-        /// The context
-        /// </summary>
         private readonly IDbContext context;
 
-        /// <summary>
-        /// The publisher
-        /// </summary>
         private readonly IPublisher publisher;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CoreNotificationService"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="publisher">The publisher</param>
         public CoreNotificationService(
             IDbContext context,
             IPublisher publisher)
@@ -42,19 +27,6 @@ namespace Beto.Core.Data.Notifications
             this.publisher = publisher;
         }
 
-        /// <summary>
-        /// News the email notification.
-        /// </summary>
-        /// <typeparam name="TEmailNotification">The type of the email notification.</typeparam>
-        /// <param name="users">The users.</param>
-        /// <param name="userTriggerEvent">The user trigger event.</param>
-        /// <param name="notification">The notification.</param>
-        /// <param name="targetUrl">The target URL.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="settings">The settings.</param>
-        /// <returns>
-        /// the task
-        /// </returns>
         public async Task NewEmailNotification<TEmailNotification>(
             IList<IUserEntity> users,
             IUserEntity userTriggerEvent,
@@ -67,41 +39,21 @@ namespace Beto.Core.Data.Notifications
             await this.NewNotification<DefaultSystemNotification, TEmailNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
 
-        /// <summary>
-        /// News the notification.
-        /// </summary>
-        /// <typeparam name="TSystemNotification">The type of the system notification.</typeparam>
-        /// <typeparam name="TEmailNotification">The type of the email notification.</typeparam>
-        /// <param name="users">The users.</param>
-        /// <param name="userTriggerEvent">The user trigger event.</param>
-        /// <param name="notification">The notification.</param>
-        /// <param name="targetUrl">The target URL.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="settings">The settings.</param>
-        /// <returns>
-        /// the task
-        /// </returns>
         public async Task NewNotification<TSystemNotification, TEmailNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
         {
-            await this.SaveNewNotification<TSystemNotification, TEmailNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
+            await this.SaveNewNotification<TSystemNotification, TEmailNotification, DefaultMobileNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
 
-        /// <summary>
-        /// Gets the email notification to add.
-        /// </summary>
-        /// <typeparam name="TEmailNotification">The type of the email notification.</typeparam>
-        /// <param name="notification">The notification.</param>
-        /// <param name="user">The user.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="defaultFromName">The default from name.</param>
-        /// <param name="defaultSubject">The default subject.</param>
-        /// <param name="defaultMessage">The default message.</param>
-        /// <param name="siteUrl">The site URL.</param>
-        /// <param name="baseHtml">The base HTML.</param>
-        /// <param name="isManual">if the notification is manual</param>
-        /// <returns>the notification</returns>
+        public async Task NewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
+            where TSystemNotification : class, ISystemNotificationEntity, new()
+            where TEmailNotification : class, IEmailNotificationEntity, new()
+            where TMobileNotification : class, IMobileNotificationEntity, new()
+        {
+            await this.SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
+        }
+
         private TEmailNotification GetEmailNotificationToAdd<TEmailNotification>(
            INotificationEntity notification,
            IUserEntity user,
@@ -154,12 +106,6 @@ namespace Beto.Core.Data.Notifications
             return emailNotification;
         }
 
-        /// <summary>
-        /// Gets the string formatted.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>the string formatted</returns>
         private string GetStringFormatted(string value, IList<NotificationParameter> parameters)
         {
             if (parameters == null)
@@ -176,19 +122,7 @@ namespace Beto.Core.Data.Notifications
             return strValue.ToString();
         }
 
-        /// <summary>
-        /// Saves the new notification.
-        /// </summary>
-        /// <typeparam name="TSystemNotification">The type of the system notification.</typeparam>
-        /// <typeparam name="TEmailNotification">The type of the email notification.</typeparam>
-        /// <param name="users">The users.</param>
-        /// <param name="userTriggerEvent">The user trigger event.</param>
-        /// <param name="notification">The notification.</param>
-        /// <param name="targetUrl">The target URL.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="settings">The settings.</param>
-        /// <returns>the task</returns>
-        private async Task SaveNewNotification<TSystemNotification, TEmailNotification>(
+        private async Task SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(
             IList<IUserEntity> users,
             IUserEntity userTriggerEvent,
             INotificationEntity notification,
@@ -197,6 +131,7 @@ namespace Beto.Core.Data.Notifications
             NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
+            where TMobileNotification : class, IMobileNotificationEntity, new()
         {
             ////En los casos manuales no las busca, sino que quedan quemadas
             ////var notification = type != NotificationType.Manual ? this.GetCachedNotification(type) : new Notification() { Active = true, IsEmail = true };
@@ -237,6 +172,7 @@ namespace Beto.Core.Data.Notifications
 
                 var systemNotificationsToInsert = new List<TSystemNotification>();
                 var emailNotificationsToInsert = new List<TEmailNotification>();
+                var mobileNotificationsToInsert = new List<TMobileNotification>();
 
                 ////Recorre los usuarios a los que debe realizar la notificación
 
@@ -257,6 +193,19 @@ namespace Beto.Core.Data.Notifications
 
                         ////Inserta la notificación de este tipo
                         systemNotificationsToInsert.Add(systemNotification);
+                    }
+
+                    if (notification.IsMobile && user.DeviceId.HasValue)
+                    {
+                        var mobileNotification = new TMobileNotification();
+                        mobileNotification.UserId = user.Id;
+                        mobileNotification.Subject = this.GetStringFormatted(notification.SystemText, parameters);
+                        mobileNotification.TargetUrl = targetUrl;
+                        mobileNotification.CreatedDate = DateTime.UtcNow;
+                        mobileNotification.DeviceId = user.DeviceId.Value;
+
+                        ////Inserta la notificación de este tipo
+                        mobileNotificationsToInsert.Add(mobileNotification);
                     }
 
                     if (notification.IsEmail && !string.IsNullOrWhiteSpace(user.Email))
@@ -298,6 +247,19 @@ namespace Beto.Core.Data.Notifications
                     await this.context.SaveChangesAsync();
 
                     await this.publisher.EntitiesInserted(systemNotificationsToInsert);
+                }
+
+                if (mobileNotificationsToInsert.Count > 0)
+                {
+                    var systemNotificationRepository = this.context.Set<TMobileNotification>();
+                    foreach (var entity in mobileNotificationsToInsert)
+                    {
+                        systemNotificationRepository.Add(entity);
+                    }
+
+                    await this.context.SaveChangesAsync();
+
+                    await this.publisher.EntitiesInserted(mobileNotificationsToInsert);
                 }
             }
         }
