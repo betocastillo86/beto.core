@@ -15,5 +15,7 @@
         DateTime CreatedDate { get; set; }
 
         DateTime? SentDate { get; set; }
+
+        string MessageHash { get; set; }
     }
 }

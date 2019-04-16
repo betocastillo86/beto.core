@@ -17,5 +17,7 @@
         public DateTime? SentDate { get; set; }
 
         public int UserId { get; set; }
+
+        public string MessageHash { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Beto.Core.Data.Notifications
     using System.Threading.Tasks;
     using Beto.Core.Data.Users;
     using Beto.Core.EventPublisher;
+    using Beto.Core.Helpers;
 
     public class CoreNotificationService : ICoreNotificationService
     {
@@ -203,6 +204,7 @@ namespace Beto.Core.Data.Notifications
                         mobileNotification.TargetUrl = targetUrl;
                         mobileNotification.CreatedDate = DateTime.UtcNow;
                         mobileNotification.DeviceId = user.DeviceId.Value;
+                        mobileNotification.MessageHash = StringHelpers.ToMd5(mobileNotification.Subject);
 
                         ////Inserta la notificación de este tipo
                         mobileNotificationsToInsert.Add(mobileNotification);
