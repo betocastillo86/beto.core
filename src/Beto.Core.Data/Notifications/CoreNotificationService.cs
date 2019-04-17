@@ -200,7 +200,7 @@ namespace Beto.Core.Data.Notifications
                     {
                         var mobileNotification = new TMobileNotification();
                         mobileNotification.UserId = user.Id;
-                        mobileNotification.Subject = this.GetStringFormatted(notification.SystemText, parameters);
+                        mobileNotification.Subject = this.GetStringFormatted(notification.MobileText, parameters);
                         mobileNotification.TargetUrl = targetUrl;
                         mobileNotification.CreatedDate = DateTime.UtcNow;
                         mobileNotification.DeviceId = user.DeviceId.Value;
