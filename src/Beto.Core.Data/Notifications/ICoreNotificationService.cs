@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 namespace Beto.Core.Data.Notifications
 {
-    using Beto.Core.Data.Users;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Beto.Core.Data.Users;
 
     /// <summary>
     /// Interface of core notification service

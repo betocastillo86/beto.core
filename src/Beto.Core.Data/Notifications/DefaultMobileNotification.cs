@@ -4,7 +4,7 @@
 
     public class DefaultMobileNotification : IMobileNotificationEntity
     {
-        private int Id { get; set; }
+        public int Id { get; set; }
 
         public Guid DeviceId { get; set; }
 

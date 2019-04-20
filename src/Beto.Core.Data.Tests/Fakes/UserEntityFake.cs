@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Beto.Core.Data.Tests.Fakes
 {
-    using Beto.Core.Data.Users;
     using System;
+    using Beto.Core.Data.Users;
 
     public class UserEntityFake : IUserEntity
     {
