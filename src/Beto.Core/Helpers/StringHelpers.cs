@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="StringHelpers.cs" company="Gabriel Castillo">
-//     Company copyright tag.
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Beto.Core.Helpers
+﻿namespace Beto.Core.Helpers
 {
     using System;
     using System.Globalization;
@@ -12,21 +7,10 @@ namespace Beto.Core.Helpers
     using System.Text;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// String Helpers
-    /// </summary>
     public static class StringHelpers
     {
-        /// <summary>
-        /// The random
-        /// </summary>
         private static Random random = new Random();
 
-        /// <summary>
-        /// Gets the random string.
-        /// </summary>
-        /// <param name="length">The length.</param>
-        /// <returns>the text</returns>
         public static string GetRandomString(int length = 6)
         {
             const string CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._/{}%&()!#-*¡?¿";
@@ -34,11 +18,13 @@ namespace Beto.Core.Helpers
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        /// <summary>
-        /// Removes the diacritics.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>the string</returns>
+        public static string GetRandomStringNoSpecialCharacters(int length = 7)
+        {
+            const string CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv";
+            return new string(Enumerable.Repeat(CHARS, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         public static string RemoveDiacritics(this string text)
         {
             var normalizedString = text.Normalize(NormalizationForm.FormD);
@@ -56,13 +42,6 @@ namespace Beto.Core.Helpers
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        /// <summary>
-        /// Converts To the MD5.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>
-        /// the <c>md5</c> value
-        /// </returns>
         public static string ToMd5(string text)
         {
             //// step 1, calculate MD5 hash from input
@@ -81,13 +60,6 @@ namespace Beto.Core.Helpers
             return sb.ToString().ToLower();
         }
 
-        /// <summary>
-        /// To the <c>sha1</c>.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>
-        /// the hash
-        /// </returns>
         public static string ToSha1(string text)
         {
             using (var sha1 = SHA1.Create())
@@ -105,24 +77,11 @@ namespace Beto.Core.Helpers
             }
         }
 
-        /// <summary>
-        /// To the <c>sha1</c> with a <c>salt</c> key
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns>
-        /// the hash
-        /// </returns>
         public static string ToSha1(string text, string salt)
         {
             return ToSha1($"{text}.{salt}");
         }
 
-        /// <summary>
-        /// To the XXS filtered string.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>the validated string</returns>
         public static string ToXXSFilteredString(this string value)
         {
             if (string.IsNullOrWhiteSpace(value))
