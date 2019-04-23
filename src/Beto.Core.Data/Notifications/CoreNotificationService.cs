@@ -10,6 +10,7 @@ namespace Beto.Core.Data.Notifications
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Beto.Core.Caching;
     using Beto.Core.Data.Users;
     using Beto.Core.EventPublisher;
     using Beto.Core.Helpers;
@@ -20,12 +21,16 @@ namespace Beto.Core.Data.Notifications
 
         private readonly IPublisher publisher;
 
+        private readonly ICacheManager cacheManager;
+
         public CoreNotificationService(
             IDbContext context,
-            IPublisher publisher)
+            IPublisher publisher,
+            ICacheManager cacheManager)
         {
             this.context = context;
             this.publisher = publisher;
+            this.cacheManager = cacheManager;
         }
 
         public async Task NewEmailNotification<TEmailNotification>(
@@ -37,22 +42,24 @@ namespace Beto.Core.Data.Notifications
             NotificationSettings settings)
             where TEmailNotification : class, IEmailNotificationEntity, new()
         {
-            await this.NewNotification<DefaultSystemNotification, TEmailNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
+            await this.NewNotification<DefaultSystemNotification, TEmailNotification, DefaultUnsubscriber>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
 
-        public async Task NewNotification<TSystemNotification, TEmailNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
+        public async Task NewNotification<TSystemNotification, TEmailNotification, TUnsubscriber>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
+            where TUnsubscriber : class, IUnsubscriberEntity, new()
         {
-            await this.SaveNewNotification<TSystemNotification, TEmailNotification, DefaultMobileNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
+            await this.SaveNewNotification<TSystemNotification, TEmailNotification, DefaultMobileNotification, TUnsubscriber>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
 
-        public async Task NewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
+        public async Task NewNotification<TSystemNotification, TEmailNotification, TMobileNotification, TUnsubscriber>(IList<IUserEntity> users, IUserEntity userTriggerEvent, INotificationEntity notification, string targetUrl, IList<NotificationParameter> parameters, NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
             where TMobileNotification : class, IMobileNotificationEntity, new()
+            where TUnsubscriber : class, IUnsubscriberEntity, new()
         {
-            await this.SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
+            await this.SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification, TUnsubscriber>(users, userTriggerEvent, notification, targetUrl, parameters, settings);
         }
 
         private TEmailNotification GetEmailNotificationToAdd<TEmailNotification>(
@@ -123,7 +130,7 @@ namespace Beto.Core.Data.Notifications
             return strValue.ToString();
         }
 
-        private async Task SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(
+        private async Task SaveNewNotification<TSystemNotification, TEmailNotification, TMobileNotification, TUnsubscriber>(
             IList<IUserEntity> users,
             IUserEntity userTriggerEvent,
             INotificationEntity notification,
@@ -133,6 +140,7 @@ namespace Beto.Core.Data.Notifications
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
             where TMobileNotification : class, IMobileNotificationEntity, new()
+            where TUnsubscriber : class, IUnsubscriberEntity, new()
         {
             ////En los casos manuales no las busca, sino que quedan quemadas
             ////var notification = type != NotificationType.Manual ? this.GetCachedNotification(type) : new Notification() { Active = true, IsEmail = true };
@@ -175,6 +183,15 @@ namespace Beto.Core.Data.Notifications
                 var emailNotificationsToInsert = new List<TEmailNotification>();
                 var mobileNotificationsToInsert = new List<TMobileNotification>();
 
+                int[] emailUnsubscribers = null;
+                int[] mobileUnsubscribers = null;
+
+                if (!typeof(TUnsubscriber).Equals(typeof(DefaultUnsubscriber)))
+                {
+                    emailUnsubscribers = this.GetEmailUnsubscriberByNotificationId<TUnsubscriber>(notification.Id);
+                    mobileUnsubscribers = this.GetMobileUnsubscriberByNotificationId<TUnsubscriber>(notification.Id);
+                }
+
                 ////Recorre los usuarios a los que debe realizar la notificación
 
                 foreach (var user in users)
@@ -196,7 +213,7 @@ namespace Beto.Core.Data.Notifications
                         systemNotificationsToInsert.Add(systemNotification);
                     }
 
-                    if (notification.IsMobile && user.DeviceId.HasValue)
+                    if (notification.IsMobile && user.DeviceId.HasValue && (mobileUnsubscribers == null || !mobileUnsubscribers.Contains(user.Id)))
                     {
                         var mobileNotification = new TMobileNotification();
                         mobileNotification.UserId = user.Id;
@@ -210,7 +227,7 @@ namespace Beto.Core.Data.Notifications
                         mobileNotificationsToInsert.Add(mobileNotification);
                     }
 
-                    if (notification.IsEmail && !string.IsNullOrWhiteSpace(user.Email))
+                    if (notification.IsEmail && !string.IsNullOrWhiteSpace(user.Email) && (emailUnsubscribers == null || !emailUnsubscribers.Contains(user.Id)))
                     {
                         var emailNotification = this.GetEmailNotificationToAdd<TEmailNotification>(
                             notification,
@@ -264,6 +281,32 @@ namespace Beto.Core.Data.Notifications
                     await this.publisher.EntitiesInserted(mobileNotificationsToInsert);
                 }
             }
+        }
+
+        private int[] GetEmailUnsubscriberByNotificationId<TUnsubscriber>(int notificationId) where TUnsubscriber : class, IUnsubscriberEntity, new()
+        {
+            return this.cacheManager.Get(
+                $"cache.core.notifications.unsubscribers.email.{notificationId}", 
+                () =>
+            {
+                return this.context.Set<TUnsubscriber>()
+                        .Where(c => c.NotificationId == notificationId && c.UnsubscribeEmail)
+                        .Select(c => c.UserId)
+                        .ToArray();
+            });
+        }
+
+        private int[] GetMobileUnsubscriberByNotificationId<TUnsubscriber>(int notificationId) where TUnsubscriber : class, IUnsubscriberEntity, new()
+        {
+            return this.cacheManager.Get(
+                $"cache.core.notifications.unsubscribers.mobile.{notificationId}", 
+                () =>
+            {
+                return this.context.Set<TUnsubscriber>()
+                        .Where(c => c.NotificationId == notificationId && c.UnsubscribeMobile)
+                        .Select(c => c.UserId)
+                        .ToArray();
+            });
         }
     }
 }

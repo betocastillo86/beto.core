@@ -14,7 +14,7 @@ namespace Beto.Core.Data.Notifications
     /// </summary>
     public interface ICoreNotificationService
     {
-        Task NewNotification<TSystemNotification, TEmailNotification, TMobileNotification>(
+        Task NewNotification<TSystemNotification, TEmailNotification, TMobileNotification, TUnsubscriber>(
             IList<IUserEntity> users,
             IUserEntity userTriggerEvent,
             INotificationEntity notification,
@@ -23,9 +23,10 @@ namespace Beto.Core.Data.Notifications
             NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
             where TEmailNotification : class, IEmailNotificationEntity, new()
-            where TMobileNotification : class, IMobileNotificationEntity, new();
+            where TMobileNotification : class, IMobileNotificationEntity, new()
+            where TUnsubscriber : class, IUnsubscriberEntity, new();
 
-        Task NewNotification<TSystemNotification, TEmailNotification>(
+        Task NewNotification<TSystemNotification, TEmailNotification, TUnsubscriber>(
             IList<IUserEntity> users,
             IUserEntity userTriggerEvent,
             INotificationEntity notification,
@@ -33,7 +34,8 @@ namespace Beto.Core.Data.Notifications
             IList<NotificationParameter> parameters,
             NotificationSettings settings)
             where TSystemNotification : class, ISystemNotificationEntity, new()
-            where TEmailNotification : class, IEmailNotificationEntity, new();
+            where TEmailNotification : class, IEmailNotificationEntity, new()
+            where TUnsubscriber : class, IUnsubscriberEntity, new();
 
         Task NewEmailNotification<TEmailNotification>(
             IList<IUserEntity> users,

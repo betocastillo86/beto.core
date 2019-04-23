@@ -9,6 +9,8 @@ namespace Beto.Core.Data.Tests.Fakes
 
     public class NotificationEntityFake : INotificationEntity
     {
+        public int Id { get; set; }
+
         public bool Active { get; set; }
 
         public bool IsSystem { get; set; }

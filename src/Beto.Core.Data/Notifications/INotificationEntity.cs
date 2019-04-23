@@ -7,6 +7,8 @@ namespace Beto.Core.Data.Notifications
 {
     public interface INotificationEntity : IEntity
     {
+        int Id { get; }
+
         bool Active { get; }
 
         bool IsSystem { get; }
