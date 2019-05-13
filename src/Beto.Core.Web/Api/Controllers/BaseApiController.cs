@@ -175,6 +175,12 @@ namespace Beto.Core.Web.Api.Controllers
             var uri = this.Url.Link(name, new { id = id });
             return this.Created(uri, new { Id = id });
         }
+
+        protected IActionResult Created(object model, string name, int id)
+        {
+            var uri = this.Url.Link(name, new { id = id });
+            return this.Created(uri, model);
+        }
         #endregion
     }
 }
