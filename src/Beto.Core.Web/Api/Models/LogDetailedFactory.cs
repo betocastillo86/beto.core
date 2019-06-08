@@ -11,11 +11,9 @@
             Exception exception,
             HttpContext context)
         {
-            var additionalInfo = new Dictionary<string, object>();
-
             var detail = new LogDetailedModel
             {
-                Exception = exception
+                AdditionalInfo = new Dictionary<string, object>()
             };
 
             LogDetailedFactory.SetUserData(detail, context);
