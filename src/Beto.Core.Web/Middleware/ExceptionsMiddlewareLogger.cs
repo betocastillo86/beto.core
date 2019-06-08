@@ -17,18 +17,14 @@
 
         private readonly IHostingEnvironment env;
 
-        private readonly IServiceProvider serviceProvider;
-
         public ExceptionsMiddlewareLogger(
             RequestDelegate next,
             ILogger<ExceptionsMiddlewareLogger> logger,
-            IHostingEnvironment env,
-            IServiceProvider serviceProvider)
+            IHostingEnvironment env)
         {
             this.next = next;
             this.logger = logger;
             this.env = env;
-            this.serviceProvider = serviceProvider;
         }
 
         public async Task Invoke(HttpContext context)
@@ -39,11 +35,8 @@
             }
             catch (Exception ex)
             {
-                var messageformat = $"[{DateTime.UtcNow}]\n {ex.ToString()} \n Url: {context?.Request?.Query}";
-
-                Console.WriteLine(messageformat);
-                this.logger.LogError(ex, messageformat);
-                this.logger.LogDebug(JsonConvert.SerializeObject(LogDetailedFactory.GetModel(ex, context)));
+                this.logger.LogError(ex, ex.Message);
+                this.logger.LogInformation(JsonConvert.SerializeObject(LogDetailedFactory.GetModel(ex, context)));
 
                 var jsonResponse = new ApiErrorModel()
                 {
