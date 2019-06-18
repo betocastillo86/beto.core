@@ -45,9 +45,12 @@ namespace Beto.Core.Caching
         /// </summary>
         public void Clear()
         {
-            foreach (var key in currentKeys)
+            lock (lockObject)
             {
-                this.memoryCache.Remove(key);
+                foreach (var key in currentKeys)
+                {
+                    this.memoryCache.Remove(key);
+                }
             }
         }
 
