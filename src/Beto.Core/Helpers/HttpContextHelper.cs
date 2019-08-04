@@ -1,39 +1,17 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="HttpContextHelper.cs" company="Gabriel Castillo">
-//     Company copyright tag.
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Beto.Core.Helpers
+﻿namespace Beto.Core.Helpers
 {
     using System;
     using Microsoft.AspNetCore.Http;
 
-    /// <summary>
-    /// Http Context Helpers
-    /// </summary>
-    /// <seealso cref="Beto.Core.Helpers.IHttpContextHelper" />
     public class HttpContextHelper : IHttpContextHelper
     {
-        /// <summary>
-        /// The accessor
-        /// </summary>
         private readonly IHttpContextAccessor accessor;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HttpContextHelper"/> class.
-        /// </summary>
-        /// <param name="accessor">The accessor.</param>
         public HttpContextHelper(IHttpContextAccessor accessor)
         {
             this.accessor = accessor;
         }
 
-        /// <summary>
-        /// Gets the HTTP context.
-        /// </summary>
-        /// <value>
-        /// The HTTP context.
-        /// </value>
         private HttpContext HttpContext
         {
             get
@@ -42,10 +20,6 @@ namespace Beto.Core.Helpers
             }
         }
 
-        /// <summary>
-        /// Gets the current <c>ip</c> address.
-        /// </summary>
-        /// <returns>the value</returns>
         public virtual string GetCurrentIpAddress()
         {
             if (!this.IsRequestAvailable())
@@ -56,11 +30,6 @@ namespace Beto.Core.Helpers
             return this.HttpContext.Connection.RemoteIpAddress.ToString();
         }
 
-        /// <summary>
-        /// Gets the this page URL.
-        /// </summary>
-        /// <param name="includeQueryString">if set to <c>true</c> [include query string].</param>
-        /// <returns>the value</returns>
         public virtual string GetThisPageUrl(bool includeQueryString)
         {
             string url = string.Empty;
@@ -85,14 +54,6 @@ namespace Beto.Core.Helpers
             return url;
         }
 
-        /// <summary>
-        /// Determines whether [is static resource] [the specified request].
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>
-        ///   <c>true</c> if [is static resource] [the specified request]; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">request parameter</exception>
         public virtual bool IsStaticResource(HttpRequest request)
         {
             if (request == null)
@@ -130,12 +91,6 @@ namespace Beto.Core.Helpers
             return false;
         }
 
-        /// <summary>
-        /// Determines whether [is request available].
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if [is request available]; otherwise, <c>false</c>.
-        /// </returns>
         protected virtual bool IsRequestAvailable()
         {
             try
@@ -153,11 +108,7 @@ namespace Beto.Core.Helpers
             return true;
         }
 
-        /// <summary>
-        /// Tries the get <c>refferer</c> URL.
-        /// </summary>
-        /// <returns>the value</returns>
-        private string TryGetRefferUrl()
+        public string TryGetRefferUrl()
         {
             string referrerUrl = string.Empty;
 
