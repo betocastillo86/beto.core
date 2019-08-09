@@ -89,7 +89,7 @@ namespace Beto.Core.Data.Tests.Notifications
 
             this.emailNotificationRepository.Verify(c => c.Add(It.IsAny<EmailNotificationEntityFake>()), Times.Never);
             this.systemNotificationRepository.Verify(c => c.Add(It.IsAny<SystemNotificationEntityFake>()));
-            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()));
+            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()), Times.Exactly(2));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace Beto.Core.Data.Tests.Notifications
 
             this.emailNotificationRepository.Verify(c => c.Add(It.IsAny<EmailNotificationEntityFake>()));
             this.systemNotificationRepository.Verify(c => c.Add(It.IsAny<SystemNotificationEntityFake>()), Times.Never);
-            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()));
+            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()), Times.Exactly(2));
         }
 
         [Test]
@@ -117,7 +117,20 @@ namespace Beto.Core.Data.Tests.Notifications
         }
 
         [Test]
-        public async Task NewNotification_NoDeviceId_DontSendMobileNotification()
+        public async Task NewNotification_WithoutDevice_DontSendMobileNotification()
+        {
+            this.user.DeviceId = null;
+            this.user.IOsDeviceId = null;
+
+            await this.CallDefaultNewNotification<DefaultUnsubscriber>();
+
+            this.emailNotificationRepository.Verify(c => c.Add(It.IsAny<EmailNotificationEntityFake>()));
+            this.systemNotificationRepository.Verify(c => c.Add(It.IsAny<SystemNotificationEntityFake>()));
+            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()), Times.Never);
+        }
+
+        [Test]
+        public async Task NewNotification_WithoutAndroidDevice_SendOnlyiOsNotification()
         {
             this.user.DeviceId = null;
 
@@ -125,7 +138,19 @@ namespace Beto.Core.Data.Tests.Notifications
 
             this.emailNotificationRepository.Verify(c => c.Add(It.IsAny<EmailNotificationEntityFake>()));
             this.systemNotificationRepository.Verify(c => c.Add(It.IsAny<SystemNotificationEntityFake>()));
-            this.mobileNotificationRepository.Verify(c => c.Add(It.IsAny<MobileNotificationEntityFake>()), Times.Never);
+            this.mobileNotificationRepository.Verify(c => c.Add(It.Is<MobileNotificationEntityFake>(x => x.DeviceId == this.user.IOsDeviceId && !x.IsAndroid)), Times.Once);
+        }
+
+        [Test]
+        public async Task NewNotification_WithoutiOsDevice_SendOnlyAndroidNotification()
+        {
+            this.user.IOsDeviceId = null;
+
+            await this.CallDefaultNewNotification<DefaultUnsubscriber>();
+
+            this.emailNotificationRepository.Verify(c => c.Add(It.IsAny<EmailNotificationEntityFake>()));
+            this.systemNotificationRepository.Verify(c => c.Add(It.IsAny<SystemNotificationEntityFake>()));
+            this.mobileNotificationRepository.Verify(c => c.Add(It.Is<MobileNotificationEntityFake>(x => x.DeviceId == this.user.DeviceId && x.IsAndroid)), Times.Once);
         }
 
         [Test]
@@ -249,7 +274,8 @@ namespace Beto.Core.Data.Tests.Notifications
                 Name = "name",
                 Email = "email",
                 Id = 1,
-                DeviceId = Guid.NewGuid()
+                DeviceId = Guid.NewGuid(),
+                IOsDeviceId = Guid.NewGuid()
             };
 
             this.emailNotificationRepository = new Mock<DbSet<EmailNotificationEntityFake>>();

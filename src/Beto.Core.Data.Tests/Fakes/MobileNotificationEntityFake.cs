@@ -20,5 +20,7 @@
         public int UserId { get; set; }
 
         public string MessageHash { get; set; }
+
+        public bool IsAndroid { get; set; }
     }
 }

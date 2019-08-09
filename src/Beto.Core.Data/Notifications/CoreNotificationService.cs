@@ -213,18 +213,34 @@ namespace Beto.Core.Data.Notifications
                         systemNotificationsToInsert.Add(systemNotification);
                     }
 
-                    if (notification.IsMobile && user.DeviceId.HasValue && (mobileUnsubscribers == null || !mobileUnsubscribers.Contains(user.Id)))
+                    if (notification.IsMobile && (user.DeviceId.HasValue || user.IOsDeviceId.HasValue) && (mobileUnsubscribers == null || !mobileUnsubscribers.Contains(user.Id)))
                     {
-                        var mobileNotification = new TMobileNotification();
-                        mobileNotification.UserId = user.Id;
-                        mobileNotification.Subject = this.GetStringFormatted(notification.MobileText, parameters);
-                        mobileNotification.TargetUrl = targetUrl;
-                        mobileNotification.CreatedDate = DateTime.UtcNow;
-                        mobileNotification.DeviceId = user.DeviceId.Value;
-                        mobileNotification.MessageHash = StringHelpers.ToMd5(mobileNotification.Subject);
+                        Func<TMobileNotification> getMobileNotification = () => {
+                            var mobileNotification = new TMobileNotification();
+                            mobileNotification.UserId = user.Id;
+                            mobileNotification.Subject = this.GetStringFormatted(notification.MobileText, parameters);
+                            mobileNotification.TargetUrl = targetUrl;
+                            mobileNotification.CreatedDate = DateTime.UtcNow;
+                            mobileNotification.MessageHash = StringHelpers.ToMd5(mobileNotification.Subject);
+                            return mobileNotification;
+                        };
 
-                        ////Inserta la notificación de este tipo
-                        mobileNotificationsToInsert.Add(mobileNotification);
+                        // Notification for Android
+                        if (user.DeviceId.HasValue)
+                        {
+                            var mobileNotification = getMobileNotification();
+                            mobileNotification.DeviceId = user.DeviceId.Value;
+                            mobileNotification.IsAndroid = true;
+                            mobileNotificationsToInsert.Add(mobileNotification);
+                        }
+
+                        // Notification for iOS
+                        if (user.IOsDeviceId.HasValue)
+                        {
+                            var mobileNotification = getMobileNotification();
+                            mobileNotification.DeviceId = user.IOsDeviceId.Value;
+                            mobileNotificationsToInsert.Add(mobileNotification);
+                        }
                     }
 
                     if (notification.IsEmail && !string.IsNullOrWhiteSpace(user.Email) && (emailUnsubscribers == null || !emailUnsubscribers.Contains(user.Id)))

@@ -17,5 +17,7 @@ namespace Beto.Core.Data.Tests.Fakes
         public string Email { get; set; }
 
         public Guid? DeviceId { get; set; }
+
+        public Guid? IOsDeviceId { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace Beto.Core.Data.Users
         string Email { get; }
 
         Guid? DeviceId { get; }
+
+        Guid? IOsDeviceId { get; }
     }
 }

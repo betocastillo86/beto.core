@@ -17,5 +17,7 @@
         DateTime? SentDate { get; set; }
 
         string MessageHash { get; set; }
+
+        bool IsAndroid { get; set; }
     }
 }
