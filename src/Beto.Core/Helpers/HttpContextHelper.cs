@@ -113,9 +113,16 @@
             string referrerUrl = string.Empty;
 
             ////URL referrer is null in some case (for example, in IE 8)
-            if (this.IsRequestAvailable() && this.HttpContext.Request.Headers.ContainsKey("Referer"))
+            if (this.IsRequestAvailable())
             {
-                referrerUrl = this.HttpContext.Request.Headers["Referer"];
+                if (this.HttpContext.Request.Headers.ContainsKey("Referer"))
+                {
+                    referrerUrl = this.HttpContext.Request.Headers["Referer"];
+                }
+                else if (this.HttpContext.Request.Headers.ContainsKey("referer"))
+                {
+                    referrerUrl = this.HttpContext.Request.Headers["referer"];
+                }
             }
 
             return referrerUrl;
