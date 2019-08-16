@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Security.Claims;
     using Microsoft.AspNetCore.Http;
 
@@ -28,8 +29,19 @@
             if (request != null)
             {
                 detail.Location = request.Path;
-                detail.AdditionalInfo.Add("UserAgent", request.Headers["User-Agent"]);
-                detail.AdditionalInfo.Add("Languages", request.Headers["Accept-Language"]);
+
+                foreach (var header in request.Headers)
+                {
+                    if (!header.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase))
+                    {
+                        detail.AdditionalInfo.Add($"Header-{header.Key}", header.Value);
+                    }
+                }
+
+                if (request.Body != null)
+                {
+                    detail.AdditionalInfo.Add("Body", new StreamReader(request.Body).ReadToEnd());
+                }
 
                 var qdict = Microsoft.AspNetCore.WebUtilities
                     .QueryHelpers.ParseQuery(request.QueryString.ToString());
