@@ -91,23 +91,6 @@
             return false;
         }
 
-        protected virtual bool IsRequestAvailable()
-        {
-            try
-            {
-                if (this.accessor?.HttpContext?.Request == null)
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public string TryGetRefferUrl()
         {
             string referrerUrl = string.Empty;
@@ -126,6 +109,23 @@
             }
 
             return referrerUrl;
+        }
+
+        protected virtual bool IsRequestAvailable()
+        {
+            try
+            {
+                if (this.accessor?.HttpContext?.Request == null)
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

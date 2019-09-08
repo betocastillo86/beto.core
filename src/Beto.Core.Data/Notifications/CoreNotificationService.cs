@@ -215,7 +215,8 @@ namespace Beto.Core.Data.Notifications
 
                     if (notification.IsMobile && (user.DeviceId.HasValue || user.IOsDeviceId.HasValue) && (mobileUnsubscribers == null || !mobileUnsubscribers.Contains(user.Id)))
                     {
-                        Func<TMobileNotification> getMobileNotification = () => {
+                        Func<TMobileNotification> getMobileNotification = () => 
+                        {
                             var mobileNotification = new TMobileNotification();
                             mobileNotification.UserId = user.Id;
                             mobileNotification.Subject = this.GetStringFormatted(notification.MobileText, parameters);
