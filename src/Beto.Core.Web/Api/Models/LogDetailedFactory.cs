@@ -40,7 +40,11 @@
 
                 if (request.Body != null)
                 {
-                    detail.AdditionalInfo.Add("Body", new StreamReader(request.Body).ReadToEnd());
+                    try
+                    {
+                        detail.AdditionalInfo.Add("Body", new StreamReader(request.Body).ReadToEnd());
+                    }
+                    catch { }
                 }
 
                 var qdict = Microsoft.AspNetCore.WebUtilities
@@ -75,7 +79,7 @@
                     else
                     {
                         detail.AdditionalInfo.Add($"UserClaim-{i++}-{claim.Type}", claim.Value);
-                    }                        
+                    }
                 }
             }
 
