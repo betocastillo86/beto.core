@@ -14,7 +14,7 @@ namespace Beto.Core.Web.Api.Controllers
     /// Base Controller for API
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
-    public class BaseApiController : Controller
+    public class BaseApiController : ControllerBase
     {
         /// <summary>
         /// The message exception finder
