@@ -9,14 +9,10 @@ namespace Beto.Core.Security
     {
         private readonly SecretClient client;
 
-        private readonly ILogger<AzureKeyVaultService> logger;
-
         public AzureKeyVaultService(
-            string keyVaultUrl,
-            ILogger<AzureKeyVaultService> logger)
+            string keyVaultUrl)
         {
             this.client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-            this.logger = logger;
         }
 
         public string FetchSecret(string secret)
@@ -26,7 +22,6 @@ namespace Beto.Core.Security
             if (value == null)
             {
                 var message = $"No se encuentra configurada el secret en prod {secret}";
-                this.logger.LogError(message);
                 throw new Exception(message);
             }
 
