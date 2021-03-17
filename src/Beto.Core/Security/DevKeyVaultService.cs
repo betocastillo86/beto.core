@@ -19,7 +19,7 @@ namespace Beto.Core.Security
                 throw new Exception($"Tratando de traer secret en desarrollo que no existe {secret}");
             }
 
-            return this.secrets[secret]
+            return this.secrets[secret];
         }
     }
 }
