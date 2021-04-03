@@ -35,7 +35,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, ex.Message);
+                this.logger.LogError(ex, ex.ToString());
                 this.logger.LogWarning(JsonConvert.SerializeObject(LogDetailedFactory.GetModel(ex, context)));
 
                 var jsonResponse = new ApiErrorModel()
