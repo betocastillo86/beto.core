@@ -28,7 +28,7 @@
 
         public void Clear()
         {
-            var server = this.connectionMultiplexer.GetServer(this.configuration["RedisServer"]);
+            var server = this.connectionMultiplexer.GetServer(this.configuration["Caching:RedisConnectionString"]);
             foreach (var key in server.Keys())
             {
                 this.distributedCache.Remove(key);
@@ -53,7 +53,7 @@
 
         public void RemoveByPattern(string pattern)
         {
-            var server = this.connectionMultiplexer.GetServer(this.configuration["RedisServer"]);
+            var server = this.connectionMultiplexer.GetServer(this.configuration["Caching:RedisConnectionString"]);
             foreach (var key in server.Keys(pattern: pattern))
             {
                 this.distributedCache.Remove(key);
