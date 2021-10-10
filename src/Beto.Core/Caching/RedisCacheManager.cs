@@ -1,6 +1,8 @@
 ﻿namespace Beto.Core.Caching
 {
     using System;
+    using System.Text;
+    using System.Text.Json;
     using Beto.Core.Helpers;
     using Microsoft.Extensions.Caching.Distributed;
     using Microsoft.Extensions.Configuration;
@@ -10,13 +12,13 @@
     {
         private readonly IDistributedCache distributedCache;
 
-        private readonly ConnectionMultiplexer connectionMultiplexer;
+        private readonly IConnectionMultiplexer connectionMultiplexer;
 
         private readonly IConfiguration configuration;
 
         public RedisCacheManager(
             IDistributedCache distributedCache,
-            ConnectionMultiplexer connectionMultiplexer,
+            IConnectionMultiplexer connectionMultiplexer,
             IConfiguration configuration)
         {
             this.distributedCache = distributedCache;
@@ -35,8 +37,8 @@
 
         public T Get<T>(string key)
         {
-            object value = this.distributedCache.Get(key);
-            return value == null ? (T)value : default(T);
+            var value = this.distributedCache.GetString(key);
+            return !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<T>(value) : default(T);
         }
 
         public bool IsSet(string key)
@@ -60,7 +62,7 @@
 
         public void Set(string key, object data, int cacheTime)
         {
-            this.distributedCache.Set(key, ReflectionHelper.ObjectToByteArray(data), new DistributedCacheEntryOptions { AbsoluteExpiration = new DateTimeOffset(new DateTime(TimeSpan.FromMinutes(cacheTime).Ticks)) });
+            this.distributedCache.SetString(key, JsonSerializer.Serialize(data), new DistributedCacheEntryOptions { AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(cacheTime)) });
         }
     }
 }
