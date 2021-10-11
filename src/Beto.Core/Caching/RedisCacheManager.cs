@@ -1,11 +1,9 @@
 ﻿namespace Beto.Core.Caching
 {
     using System;
-    using System.Text;
     using System.Text.Json;
-    using Beto.Core.Helpers;
     using Microsoft.Extensions.Caching.Distributed;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using StackExchange.Redis;
 
     public class RedisCacheManager : ICacheManager
@@ -14,24 +12,25 @@
 
         private readonly IConnectionMultiplexer connectionMultiplexer;
 
-        private readonly IConfiguration configuration;
-
         public RedisCacheManager(
             IDistributedCache distributedCache,
             IConnectionMultiplexer connectionMultiplexer,
-            IConfiguration configuration)
+            ILogger<RedisCacheManager> logger)
         {
             this.distributedCache = distributedCache;
             this.connectionMultiplexer = connectionMultiplexer;
-            this.configuration = configuration;
         }
 
         public void Clear()
         {
-            var server = this.connectionMultiplexer.GetServer(this.configuration["Caching:RedisConnectionString"]);
-            foreach (var key in server.Keys())
+            foreach (var endpoint in this.connectionMultiplexer.GetEndPoints())
             {
-                this.distributedCache.Remove(key);
+                //TODO: Improve this
+                var server = this.connectionMultiplexer.GetServer(endpoint);
+                foreach (var key in server.Keys())
+                {
+                    this.distributedCache.Remove(key);
+                }
             }
         }
 
@@ -53,10 +52,14 @@
 
         public void RemoveByPattern(string pattern)
         {
-            var server = this.connectionMultiplexer.GetServer(this.configuration["Caching:RedisConnectionString"]);
-            foreach (var key in server.Keys(pattern: pattern))
+            foreach (var endpoint in this.connectionMultiplexer.GetEndPoints())
             {
-                this.distributedCache.Remove(key);
+                //TODO: Improve this
+                var server = this.connectionMultiplexer.GetServer(endpoint);
+                foreach (var key in server.Keys(pattern: pattern))
+                {
+                    this.distributedCache.Remove(key);
+                }
             }
         }
 
