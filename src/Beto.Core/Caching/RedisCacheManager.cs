@@ -56,7 +56,7 @@
             {
                 //TODO: Improve this
                 var server = this.connectionMultiplexer.GetServer(endpoint);
-                foreach (var key in server.Keys(pattern: pattern))
+                foreach (var key in server.Keys(pattern: pattern + "*"))
                 {
                     this.distributedCache.Remove(key);
                 }
