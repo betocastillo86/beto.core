@@ -14,8 +14,7 @@
 
         public RedisCacheManager(
             IDistributedCache distributedCache,
-            IConnectionMultiplexer connectionMultiplexer,
-            ILogger<RedisCacheManager> logger)
+            IConnectionMultiplexer connectionMultiplexer)
         {
             this.distributedCache = distributedCache;
             this.connectionMultiplexer = connectionMultiplexer;

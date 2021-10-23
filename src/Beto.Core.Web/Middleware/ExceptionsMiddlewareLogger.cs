@@ -48,6 +48,8 @@
                 string jsonString = JsonConvert.SerializeObject(jsonResponse, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
                 context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
+
                 await context.Response.WriteAsync(jsonString, System.Text.Encoding.UTF8);
             }
         }
