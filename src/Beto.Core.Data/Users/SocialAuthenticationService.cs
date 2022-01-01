@@ -6,8 +6,8 @@
 namespace Beto.Core.Data.Users
 {
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading.Tasks;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Social Authentication Service
@@ -29,7 +29,7 @@ namespace Beto.Core.Data.Users
                 var uri = "https://graph.facebook.com/me?fields=id,name,email&access_token=" + token;
                 var response = await client.GetAsync(uri);
                 var json = await response.Content.ReadAsStringAsync();
-                FacebookUserModel facebookUser = JsonConvert.DeserializeObject<FacebookUserModel>(json);
+                FacebookUserModel facebookUser = JsonSerializer.Deserialize<FacebookUserModel>(json);
                 return facebookUser;
             }
         }

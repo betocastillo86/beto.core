@@ -1,13 +1,12 @@
 ﻿namespace Beto.Core.Web.Middleware
 {
-    using System;
-    using System.Threading.Tasks;
     using Beto.Core.Web.Api;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using System;
+    using System.Text.Json;
+    using System.Threading.Tasks;
 
     public sealed class ExceptionsMiddlewareLogger
     {
@@ -17,6 +16,8 @@
 
         private readonly IHostingEnvironment env;
 
+        private readonly JsonSerializerOptions options;
+
         public ExceptionsMiddlewareLogger(
             RequestDelegate next,
             ILogger<ExceptionsMiddlewareLogger> logger,
@@ -25,6 +26,7 @@
             this.next = next;
             this.logger = logger;
             this.env = env;
+            this.options = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         }
 
         public async Task Invoke(HttpContext context)
@@ -35,7 +37,7 @@
             }
             catch (Exception ex)
             {
-                var requestDetails = JsonConvert.SerializeObject(LogDetailedFactory.GetModel(ex, context));
+                var requestDetails = JsonSerializer.Serialize(LogDetailedFactory.GetModel(ex, context));
 
                 this.logger.LogError(ex, $"{ex} RequestData: {{requestDetails}}".ToString(), requestDetails);
 
@@ -45,7 +47,7 @@
                     Message = this.env.IsDevelopment() ? ex.ToString() : "Error inesperado, intene de nuevo"
                 };
 
-                string jsonString = JsonConvert.SerializeObject(jsonResponse, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                string jsonString = JsonSerializer.Serialize<ApiErrorModel>(jsonResponse, this.options);
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json";
