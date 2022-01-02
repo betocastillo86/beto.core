@@ -19,11 +19,6 @@ namespace Beto.Core.Data.Configuration
     public class CoreSettingService : ICoreSettingService
     {
         /// <summary>
-        /// The settings get all
-        /// </summary>
-        private static string settingsGelAll = "cache.settings.all";
-
-        /// <summary>
         /// The cache manager
         /// </summary>
         private readonly ICacheManager cacheManager;
@@ -107,8 +102,17 @@ namespace Beto.Core.Data.Configuration
         /// </returns>
         public T GetCachedSetting<T, TEntity>(string key) where TEntity : class, ISettingEntity
         {
-            string value = string.Empty;
-            if (this.GetAllCachedSettings<TEntity>().TryGetValue(key, out value))
+            var settingKey = $"cache.settings.{key}";
+            var value = this.cacheManager.Get<string>(
+                settingKey,
+                5000,
+                () =>
+                {
+                    return this.context.Set<TEntity>().FirstOrDefault(c => c.Name.Equals(key))?.Value;
+                });
+
+
+            if (value != null)
             {
                 TypeConverter destinationConverter = TypeDescriptor.GetConverter(typeof(T));
                 return (T)destinationConverter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, value);
@@ -147,29 +151,6 @@ namespace Beto.Core.Data.Configuration
             await this.context.SaveChangesAsync();
 
             await this.publisher.EntityUpdated(setting);
-        }
-
-        /// <summary>
-        /// Gets all cached settings.
-        /// </summary>
-        /// <typeparam name="T">the entity type</typeparam>
-        /// <returns>the settings cached</returns>
-        protected IDictionary<string, string> GetAllCachedSettings<T>() where T : class, ISettingEntity
-        {
-            var allKeys = this.cacheManager.Get(
-                settingsGelAll,
-                5000,
-                () =>
-                {
-                    var dictionarySettings = new Dictionary<string, string>();
-                    foreach (var setting in this.GetAsync<T>().Result)
-                    {
-                        dictionarySettings.Add(setting.Name, setting.Value);
-                    }
-
-                    return dictionarySettings;
-                });
-            return allKeys;
         }
     }
 }
